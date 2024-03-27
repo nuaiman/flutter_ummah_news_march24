@@ -18,5 +18,6 @@ class Svgs {
   static const quran = '$assetPath/quran.svg';
   static const salah = '$assetPath/salah.svg';
   static const splash = '$assetPath/splash.svg';
-    static const barometerBg = '$assetPath/barometerBg.svg';
+  static const barometerBg = '$assetPath/barometerBg.svg';
+  static const surahCard = '$assetPath/surahCard.svg';
 }

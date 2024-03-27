@@ -42,12 +42,16 @@ class QuranVerse {
   final String text;
   final String translationBn;
   final String translationEn;
+  final String transliterationBn;
+  final String transliterationEn;
 
   QuranVerse({
     required this.id,
     required this.text,
     required this.translationBn,
     required this.translationEn,
+    required this.transliterationBn,
+    required this.transliterationEn,
   });
 
   factory QuranVerse.fromJson(Map<String, dynamic> json) {
@@ -56,6 +60,8 @@ class QuranVerse {
       text: json['text'],
       translationBn: json['translation_bn'],
       translationEn: json['translation_en'],
+      transliterationBn: json['transliteration_bn'],
+      transliterationEn: json['transliteration_en'],
     );
   }
 }
