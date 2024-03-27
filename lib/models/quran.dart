@@ -4,7 +4,8 @@ class QuranSurah {
   final int totalVerses;
   final String translationBn;
   final String translationEn;
-  final String transliteration;
+  final String transliterationEn;
+  final String transliteratioBn;
   final String type;
   final List<QuranVerse> verses;
 
@@ -14,7 +15,8 @@ class QuranSurah {
     required this.totalVerses,
     required this.translationBn,
     required this.translationEn,
-    required this.transliteration,
+    required this.transliterationEn,
+    required this.transliteratioBn,
     required this.type,
     required this.verses,
   });
@@ -26,7 +28,8 @@ class QuranSurah {
       totalVerses: json['total_verses'],
       translationBn: json['translation_bn'],
       translationEn: json['translation_en'],
-      transliteration: json['transliteration'],
+      transliterationEn: json['transliteration_en'],
+      transliteratioBn: json['transliteration_bn'],
       type: json['type'],
       verses: List<QuranVerse>.from(
           json['verses'].map((verse) => QuranVerse.fromJson(verse))),
