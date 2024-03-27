@@ -4,7 +4,7 @@ import 'package:imaan_barometer/features/home/screens/initialization_screen.dart
 
 import 'core/constants/palette.dart';
 
-void main() {
+void main() async {
   runApp(const ProviderScope(child: BarometerOfImaan()));
 }
 

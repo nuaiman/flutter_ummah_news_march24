@@ -8,6 +8,7 @@ class Txt extends StatelessWidget {
   final FontWeight fontWeight;
   final Color color;
   final String fontFamily;
+  final TextDirection textDirection;
   const Txt(
     this.text, {
     super.key,
@@ -15,12 +16,14 @@ class Txt extends StatelessWidget {
     this.fontWeight = FontWeight.w400,
     this.color = Palette.black,
     this.fontFamily = 'Roboto',
+    this.textDirection = TextDirection.ltr,
   });
 
   @override
   Widget build(BuildContext context) {
     return Text(
       text,
+      textDirection: textDirection,
       style: TextStyle(
         color: color,
         fontSize: fontSize,
