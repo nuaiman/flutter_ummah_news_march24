@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:imaan_barometer/core/constants/pngs.dart';
 import 'package:imaan_barometer/features/deeds/screens/deeds_screen.dart';
+import 'package:imaan_barometer/features/quran/screens/quran_screen.dart';
 import 'package:top_modal_sheet/top_modal_sheet.dart';
 
 import '../../../core/constants/palette.dart';
@@ -116,7 +117,9 @@ class HomeScreen extends StatelessWidget {
                       GridItemTile(
                         label: 'Quran',
                         svgPath: Svgs.quran,
-                        onTap: () {},
+                        onTap: () {
+                          Navigator.of(context).push(QuranScreen.route());
+                        },
                       ),
                     ],
                   ),
