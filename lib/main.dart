@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:imaan_barometer/features/home/screens/home_screen..dart';
 import 'package:imaan_barometer/features/home/screens/initialization_screen.dart';
 
 import 'core/constants/palette.dart';
@@ -22,7 +21,7 @@ class BarometerOfImaan extends StatelessWidget {
         ),
         useMaterial3: true,
       ),
-      home: HomeScreen(),
+      home: InitializationScreen(),
     );
   }
 }

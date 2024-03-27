@@ -22,7 +22,6 @@ class _DeedTileState extends ConsumerState<DeedTile> {
   @override
   Widget build(BuildContext context) {
     ref.watch(deedsProvider);
-    // print(ref.watch(deedsProvider.notifier).getIsDoneStatus(widget.deed.id));
     return Card(
       color: Palette.liteGrey,
       surfaceTintColor: Palette.liteGrey,

@@ -1,89 +1,57 @@
+import 'dart:convert';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:imaan_barometer/models/deed.dart';
-
-// class DeedStateNotifier extends StateNotifier<List<Deed>> {
-//   DeedStateNotifier()
-//       : super([
-//           Deed(
-//             id: 1,
-//             title: 'Title 1',
-//             isDone: false,
-//             dayOfWeek: DateFormat('EEEE').format(DateTime.now()),
-//             day: DateTime.now().day,
-//             month: DateTime.now().month,
-//             year: DateTime.now().year,
-//           ),
-//           Deed(
-//             id: 2,
-//             title: 'Title 2',
-//             isDone: false,
-//             dayOfWeek: DateFormat('EEEE').format(DateTime.now()),
-//             day: DateTime.now().day,
-//             month: DateTime.now().month,
-//             year: DateTime.now().year,
-//           ),
-//           Deed(
-//             id: 3,
-//             title: 'Title 3',
-//             isDone: false,
-//             dayOfWeek: DateFormat('EEEE').format(DateTime.now()),
-//             day: DateTime.now().day,
-//             month: DateTime.now().month,
-//             year: DateTime.now().year,
-//           ),
-//           Deed(
-//             id: 4,
-//             title: 'Title 4',
-//             isDone: false,
-//             dayOfWeek: DateFormat('EEEE').format(DateTime.now()),
-//             day: DateTime.now().day,
-//             month: DateTime.now().month,
-//             year: DateTime.now().year,
-//           ),
-//           Deed(
-//             id: 5,
-//             title: 'Title 5',
-//             isDone: false,
-//             dayOfWeek: DateFormat('EEEE').format(DateTime.now()),
-//             day: DateTime.now().day,
-//             month: DateTime.now().month,
-//             year: DateTime.now().year,
-//           ),
-//           Deed(
-//             id: 6,
-//             title: 'Title 6',
-//             isDone: false,
-//             dayOfWeek: DateFormat('EEEE').format(DateTime.now()),
-//             day: DateTime.now().day,
-//             month: DateTime.now().month,
-//             year: DateTime.now().year,
-//           ),
-//           Deed(
-//             id: 7,
-//             title: 'Title 7',
-//             isDone: false,
-//             dayOfWeek: DateFormat('EEEE').format(DateTime.now()),
-//             day: DateTime.now().day,
-//             month: DateTime.now().month,
-//             year: DateTime.now().year,
-//           ),
-//         ]);
-
-//   bool getIsDoneStatus(int id) {
-//     return state.firstWhere((element) => element.id == id).isDone;
-//   }
-
-//   void markAsDone(int id, bool value) {
-//     final updatedState = [...state];
-//     updatedState.firstWhere((deed) => deed.id == id).isDone = value;
-//     state = updatedState;
-//   }
-// }
+import 'package:shared_preferences/shared_preferences.dart';
 
 class DeedsController extends StateNotifier<List<Deed>> {
   DeedsController() : super([]);
 
   static const _key = 'deeds';
+
+  Future<void> loadDeeds() async {
+    final prefs = await SharedPreferences.getInstance();
+    final List<String>? deedsJson = prefs.getStringList(_key);
+
+    if (deedsJson != null) {
+      final deeds =
+          deedsJson.map((json) => Deed.fromJson(jsonDecode(json))).toList();
+      state = deeds;
+    } else {
+      state = [];
+    }
+
+    print(state);
+  }
+
+  Future<void> _saveDeeds(List<Deed> deeds) async {
+    final prefs = await SharedPreferences.getInstance();
+    final deedsJson = deeds.map((deed) => jsonEncode(deed.toJson())).toList();
+    await prefs.setStringList(_key, deedsJson);
+  }
+
+  void markAsDone(Deed deed, bool value) {
+    final updateAbleDeed = deed.copyWith(isDone: value);
+    bool isSameDeed(Deed existingDeed) {
+      return existingDeed.id == deed.id &&
+          existingDeed.dayOfWeek == deed.dayOfWeek &&
+          existingDeed.day == deed.day &&
+          existingDeed.month == deed.month &&
+          existingDeed.year == deed.year;
+    }
+
+    if (value == true) {
+      final alreadyExists = state.any(isSameDeed);
+      if (!alreadyExists) {
+        state = [...state, updateAbleDeed];
+      }
+    } else {
+      state.removeWhere(isSameDeed);
+      state = List.from(state);
+    }
+    print(state);
+    _saveDeeds(state);
+  }
 
   bool getIsDoneStatus(Deed deed) {
     try {
@@ -99,39 +67,6 @@ class DeedsController extends StateNotifier<List<Deed>> {
       return false;
     }
   }
-
-  void markAsDone(Deed deed, bool value) {
-    final updateAbleDeed = deed.copyWith(isDone: value);
-    if (value == true) {
-      final alreadyExists = state.any((existingDeed) =>
-          existingDeed.id == deed.id &&
-          existingDeed.dayOfWeek == deed.dayOfWeek &&
-          existingDeed.day == deed.day &&
-          existingDeed.month == deed.month &&
-          existingDeed.year == deed.year);
-
-      if (!alreadyExists) {
-        state = [...state, updateAbleDeed];
-      }
-    } else {
-      state.removeWhere(
-        (existingDeed) =>
-            existingDeed.id == deed.id &&
-            existingDeed.dayOfWeek == deed.dayOfWeek &&
-            existingDeed.day == deed.day &&
-            existingDeed.month == deed.month &&
-            existingDeed.year == deed.year,
-      );
-      state = List.from(state);
-    }
-    print(state);
-  }
-
-  // Future<void> _saveDeeds(List<Deed> deeds) async {
-  //   final prefs = await SharedPreferences.getInstance();
-  //   final deedsJson = deeds.map((deed) => jsonEncode(deed.toJson())).toList();
-  //   await prefs.setStringList(_key, deedsJson);
-  // }
 
   // Future<List<Deed>> _getDeeds() async {
   //   final prefs = await SharedPreferences.getInstance();

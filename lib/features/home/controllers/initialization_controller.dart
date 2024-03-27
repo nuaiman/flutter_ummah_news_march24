@@ -10,7 +10,7 @@ class InitializationContoller extends StateNotifier<bool> {
         super(false);
 
   void getAllDeeds(BuildContext context) async {
-    // await _deedsController.loadData();
+    await _deedsController.loadDeeds();
     Navigator.of(context).pushAndRemoveUntil(
       HomeScreen.route(),
       (route) => false,
