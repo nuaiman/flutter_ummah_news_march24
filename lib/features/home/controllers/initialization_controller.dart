@@ -11,10 +11,12 @@ class InitializationContoller extends StateNotifier<bool> {
 
   void getAllDeeds(BuildContext context) async {
     await _deedsController.loadDeeds();
-    Navigator.of(context).pushAndRemoveUntil(
-      HomeScreen.route(),
-      (route) => false,
-    );
+    if (context.mounted) {
+      Navigator.of(context).pushAndRemoveUntil(
+        HomeScreen.route(),
+        (route) => false,
+      );
+    }
   }
 }
 // -----------------------------------------------------------------------------

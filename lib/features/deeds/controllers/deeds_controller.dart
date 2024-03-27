@@ -20,8 +20,6 @@ class DeedsController extends StateNotifier<List<Deed>> {
     } else {
       state = [];
     }
-
-    print(state);
   }
 
   Future<void> _saveDeeds(List<Deed> deeds) async {
@@ -49,7 +47,6 @@ class DeedsController extends StateNotifier<List<Deed>> {
       state.removeWhere(isSameDeed);
       state = List.from(state);
     }
-    print(state);
     _saveDeeds(state);
   }
 
@@ -67,45 +64,6 @@ class DeedsController extends StateNotifier<List<Deed>> {
       return false;
     }
   }
-
-  // Future<List<Deed>> _getDeeds() async {
-  //   final prefs = await SharedPreferences.getInstance();
-  //   final deedsJson = prefs.getStringList(_key) ?? [];
-  //   return deedsJson.map((json) => Deed.fromJson(jsonDecode(json))).toList();
-  // }
-
-  // Future<void> loadData() async {
-  //   final List<Deed> existingDeeds = state;
-  //   final List<Deed> loadedDeeds = await _getDeeds();
-  //   print(loadedDeeds);
-  //   for (final loadedDeed in loadedDeeds) {
-  //     final matchingDeedIndex = existingDeeds.indexWhere((existingDeed) =>
-  //         existingDeed.dayOfWeek == loadedDeed.dayOfWeek &&
-  //         existingDeed.day == loadedDeed.day &&
-  //         existingDeed.month == loadedDeed.month &&
-  //         existingDeed.year == loadedDeed.year);
-
-  //     if (matchingDeedIndex != -1) {
-  //       existingDeeds[matchingDeedIndex] = existingDeeds[matchingDeedIndex]
-  //           .copyWith(isDone: loadedDeed.isDone);
-  //     }
-  //   }
-  //   state = existingDeeds;
-  // }
-
-  // Future<void> addDeed(Deed deed) async {
-  //   final List<Deed> deeds = List.from(state);
-  //   deeds.add(deed);
-  //   state = deeds;
-  //   await _saveDeeds(state);
-  // }
-
-  // Future<void> removeDeed(Deed deed) async {
-  //   final List<Deed> deeds = List.from(state);
-  //   deeds.removeWhere((item) => item.id == deed.id);
-  //   state = deeds;
-  //   await _saveDeeds(state);
-  // }
 }
 
 final deedsProvider = StateNotifierProvider<DeedsController, List<Deed>>((ref) {
