@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:imaan_barometer/features/home/screens/initialization_screen.dart';
 
 import 'core/constants/palette.dart';
 
 void main() async {
+  SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+    statusBarColor:
+        Colors.transparent, // Change this to your desired status bar color
+    statusBarIconBrightness: Brightness.dark, // Set this to Brightness.dark
+  ));
   runApp(const ProviderScope(child: BarometerOfImaan()));
 }
 
@@ -21,7 +27,7 @@ class BarometerOfImaan extends StatelessWidget {
         ),
         useMaterial3: true,
       ),
-      home: InitializationScreen(),
+      home: const InitializationScreen(),
     );
   }
 }

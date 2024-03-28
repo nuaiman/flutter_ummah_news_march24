@@ -20,6 +20,7 @@ class InitializationContoller extends StateNotifier<bool> {
     if (context.mounted) {
       await _quranController.loadQuranSurahs(context);
     }
+    await _quranController.getSurahFromSharedPreferences();
     if (context.mounted) {
       Navigator.of(context).pushAndRemoveUntil(
         HomeScreen.route(),

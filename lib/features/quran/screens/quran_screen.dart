@@ -163,143 +163,154 @@ class QuranScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final quran = ref.watch(quranProvider);
-    return FutureBuilder<SavedSurahVerse?>(
-      future: ref.read(quranProvider.notifier).getSurahFromSharedPreferences(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const CircularProgressIndicator();
-        } else if (snapshot.hasError) {
-          return Text('Error: ${snapshot.error}');
-        } else {
-          final lastReadSura = snapshot.data!.surah;
-          final lastReadVerse = snapshot.data!.verseId;
-          return Scaffold(
-            appBar: AppBar(
-              title: const Text('Al-Quran'),
+    SavedSurahVerse? gottenSurah =
+        ref.watch(quranProvider.notifier).savedSurahVerse;
+    return Container(
+      decoration: const BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage(Pngs.bg),
+          fit: BoxFit.cover,
+        ),
+      ),
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          backgroundColor: Colors.transparent,
+          surfaceTintColor: Colors.transparent,
+          elevation: 0,
+          leading: IconButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            icon: SvgPicture.asset(Svgs.backButton),
+          ),
+          title: Txt(
+            'Al-Quran',
+            fontSize: 24,
+          ),
+          actions: [
+            IconButton(
+              onPressed: () {},
+              icon: SvgPicture.asset(Svgs.menu),
             ),
-            body: Container(
-              decoration: const BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage(Pngs.bg),
-                  fit: BoxFit.cover,
-                ),
-              ),
-              child: SingleChildScrollView(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Column(
-                    children: [
-                      Stack(
-                        alignment: Alignment.center,
-                        children: [
-                          SvgPicture.asset(Svgs.surahCard),
-                          Positioned(
-                            child: Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 12, right: 12, bottom: 18),
-                              child: Column(
-                                children: [
-                                  const Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      Txt(
-                                        'Last Read',
-                                        color: Palette.lime,
-                                        fontSize: 14,
-                                      ),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 12),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Txt(
-                                        lastReadSura.transliterationEn,
-                                        color: Palette.white,
-                                        fontSize: 24,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                      IconButton(
-                                        onPressed: () {
-                                          Navigator.of(context)
-                                              .push(SurahScreen.route(
-                                            surah: lastReadSura,
-                                            verseId: lastReadVerse,
-                                          ));
-                                        },
-                                        icon: const Icon(
-                                          Icons.arrow_forward,
-                                          color: Palette.white,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      Txt(
-                                        'Verse: $lastReadVerse',
-                                        color: Palette.white,
-                                        fontSize: 18,
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      ListView.separated(
-                        primary: false,
-                        shrinkWrap: true,
-                        itemCount: quran.length,
-                        separatorBuilder: (context, index) => const Divider(),
-                        itemBuilder: (context, index) {
-                          final surah = quran[index];
-                          return ListTile(
-                            onTap: () {
-                              Navigator.of(context).push(
-                                SurahScreen.route(surah: surah),
-                              );
-                            },
-                            leading: Stack(
-                              alignment: Alignment.center,
+          ],
+        ),
+        body: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Column(
+            children: [
+              gottenSurah == null
+                  ? SizedBox.shrink()
+                  : Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        SvgPicture.asset(Svgs.surahCard),
+                        Positioned(
+                          child: Padding(
+                            padding: const EdgeInsets.only(
+                                left: 12, right: 12, bottom: 18),
+                            child: Column(
                               children: [
-                                SvgPicture.asset(Svgs.counterStroke),
-                                Txt(
-                                  (index + 1).toString(),
-                                  fontSize: 20,
-                                  color: Palette.green,
+                                const Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Txt(
+                                      'Last Read',
+                                      color: Palette.lime,
+                                      fontSize: 14,
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 12),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Txt(
+                                      gottenSurah.surah.transliterationEn,
+                                      color: Palette.white,
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                    IconButton(
+                                      onPressed: () {
+                                        Navigator.of(context)
+                                            .push(SurahScreen.route(
+                                          surah: gottenSurah.surah,
+                                          verseId: gottenSurah.verseId,
+                                        ));
+                                      },
+                                      icon: const Icon(
+                                        Icons.arrow_forward,
+                                        color: Palette.white,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Txt(
+                                      'Verse: ${gottenSurah.verseId}',
+                                      color: Palette.white,
+                                      fontSize: 18,
+                                    ),
+                                  ],
                                 ),
                               ],
                             ),
-                            title: Txt(
-                              surah.transliterationEn,
-                              fontSize: 24,
-                              fontWeight: FontWeight.w600,
-                            ),
-                            subtitle: Txt(
-                              surah.translationEn,
-                              fontSize: 18,
-                              color: Palette.grey,
-                            ),
-                            trailing: Txt(
-                              surah.name,
-                              fontSize: 24,
-                            ),
-                          );
-                        },
+                          ),
+                        ),
+                      ],
+                    ),
+              Expanded(
+                child: ListView.separated(
+                  primary: false,
+                  shrinkWrap: true,
+                  itemCount: quran.length,
+                  separatorBuilder: (context, index) => const Divider(),
+                  itemBuilder: (context, index) {
+                    final surah = quran[index];
+                    return ListTile(
+                      onTap: () {
+                        Navigator.of(context).push(
+                          SurahScreen.route(surah: surah),
+                        );
+                      },
+                      leading: Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          SvgPicture.asset(Svgs.counterStroke),
+                          Txt(
+                            (index + 1).toString(),
+                            fontSize: 20,
+                            color: Palette.green,
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
+                      title: Txt(
+                        surah.transliterationEn,
+                        fontSize: 24,
+                        fontWeight: FontWeight.w600,
+                      ),
+                      subtitle: Txt(
+                        surah.translationEn,
+                        fontSize: 18,
+                        color: Palette.grey,
+                      ),
+                      trailing: Txt(
+                        surah.name,
+                        fontSize: 24,
+                      ),
+                    );
+                  },
                 ),
               ),
-            ),
-          );
-        }
-      },
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

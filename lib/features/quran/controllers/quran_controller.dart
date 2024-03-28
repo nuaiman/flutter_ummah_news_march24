@@ -12,6 +12,9 @@ class QuranController extends StateNotifier<List<QuranSurah>> {
   static const String surahIdKey = 'surahId';
   static const String verseIdKey = 'verseId';
 
+  SavedSurahVerse? _savedSurahVerse;
+  SavedSurahVerse? get savedSurahVerse => _savedSurahVerse;
+
   Future<void> loadQuranSurahs(BuildContext context) async {
     String data = await DefaultAssetBundle.of(context)
         .loadString('assets/jsons/quran.json');
@@ -23,21 +26,18 @@ class QuranController extends StateNotifier<List<QuranSurah>> {
     return state.firstWhere((surah) => surah.id == id);
   }
 
+  void updateState() {
+    state = List.from(state);
+  }
+
   Future<void> saveSurahVerseToSharedPreferences(
       int surahId, int verseId) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setInt(surahIdKey, surahId);
     await prefs.setInt(verseIdKey, verseId);
+    final surah = getSurahById(surahId);
+    _savedSurahVerse = SavedSurahVerse(surah: surah!, verseId: verseId);
   }
-
-  // Future<QuranSurah?> getSurahFromSharedPreferences() async {
-  //   SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   int? surahId = prefs.getInt(surahIdKey);
-  //   if (surahId != null) {
-  //     return getSurahById(surahId);
-  //   }
-  //   return null;
-  // }
 
   Future<SavedSurahVerse?> getSurahFromSharedPreferences() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -46,6 +46,9 @@ class QuranController extends StateNotifier<List<QuranSurah>> {
     if (surahId != null && verseId != null) {
       QuranSurah? surah = getSurahById(surahId);
       if (surah != null) {
+        final gottenSura = getSurahById(surahId);
+        _savedSurahVerse =
+            SavedSurahVerse(surah: gottenSura!, verseId: verseId);
         return SavedSurahVerse(surah: surah, verseId: verseId);
       }
     }

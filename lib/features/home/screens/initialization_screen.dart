@@ -9,7 +9,7 @@ class InitializationScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     ref.read(initializationProvider.notifier).getAllDeeds(context);
-    return Scaffold(
+    return const Scaffold(
       body: Center(
         child: CircularProgressIndicator(
           color: Palette.lime,
