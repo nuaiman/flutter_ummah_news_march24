@@ -1,32 +1,29 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_qiblah/flutter_qiblah.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:imaan_barometer/core/constants/palette.dart';
+import 'package:imaan_barometer/core/constants/svgs.dart';
+import 'package:imaan_barometer/features/gps/controllers/gps_controller.dart';
 
 import '../../../core/common/widgets/transparent_appbar.dart';
+import '../../../core/common/widgets/txt.dart';
 import '../../../core/constants/pngs.dart';
 
-import 'dart:math' as math;
-
 class QiblaScreen extends StatefulWidget {
-  const QiblaScreen({Key? key});
-
   static route() => MaterialPageRoute(
         builder: (context) => const QiblaScreen(),
       );
+  const QiblaScreen({super.key});
+
   @override
-  QiblaScreenState createState() => QiblaScreenState();
+  State<QiblaScreen> createState() => _QiblaScreenState();
 }
 
-class QiblaScreenState extends State<QiblaScreen> {
-  double azimuth = 0; // Device azimuth angle
-  final double qiblaDirection = 58.531; // Direction of Mecca in degrees
-
-  @override
-  void initState() {
-    super.initState();
-    // Use the sensor API directly from the Flutter SDK
-    // This requires enabling platform channels
-    // You may need to handle permissions and check sensor availability on specific platforms
-  }
-
+class _QiblaScreenState extends State<QiblaScreen> {
+  final _deviceSupport = FlutterQiblah.androidDeviceSensorSupport();
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -40,22 +37,118 @@ class QiblaScreenState extends State<QiblaScreen> {
         backgroundColor: Colors.transparent,
         body: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 6),
-          child: Column(
-            children: [
-              const TransparentAppBar(
-                text: 'Qibla',
-              ),
-              Center(
-                child: Transform.rotate(
-                  angle: math.pi / 180 * (qiblaDirection - azimuth),
-                  child: Icon(Icons
-                      .arrow_circle_up_outlined), // Replace with your compass needle image
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                const TransparentAppBar(
+                  text: 'Qibla',
                 ),
-              ),
-            ],
+                FutureBuilder(
+                  future: _deviceSupport,
+                  builder: (_, AsyncSnapshot<bool?> snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const CircularProgressIndicator();
+                    }
+                    if (snapshot.hasError) {
+                      return Center(
+                        child: Text("Error: ${snapshot.error.toString()}"),
+                      );
+                    }
+
+                    if (snapshot.data != null) {
+                      return QiblahCompass();
+                      // return CircularProgressIndicator(
+                      //   color: Colors.yellow,
+                      // );
+                    } else {
+                      return const CircularProgressIndicator(
+                        color: Colors.indigo,
+                      );
+                    }
+                  },
+                ),
+              ],
+            ),
           ),
         ),
       ),
+    );
+  }
+}
+
+class QiblahCompass extends ConsumerWidget {
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return StreamBuilder<QiblahDirection>(
+      stream: FlutterQiblah.qiblahStream,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const CircularProgressIndicator();
+        }
+
+        if (!snapshot.hasData) {
+          return const Center(
+            child: Text(
+              'No data available',
+            ),
+          );
+        }
+
+        final qiblahDirection = snapshot.data!;
+        final northDirection = qiblahDirection.direction ?? 0;
+        final qiblaDirection =
+            qiblahDirection.qiblah != null ? qiblahDirection.qiblah % 360 : 0;
+
+        return Stack(
+          clipBehavior: Clip.none,
+          alignment: Alignment.center,
+          children: <Widget>[
+            Transform.rotate(
+              angle: (-northDirection * pi / 180),
+              child: SvgPicture.asset(
+                Svgs.compass,
+                height: 280,
+                alignment: Alignment.center,
+              ),
+            ),
+            Transform.rotate(
+              angle: (-qiblaDirection * pi / 180),
+              alignment: Alignment.center,
+              child: SvgPicture.asset(
+                Svgs.needle,
+                height: 150,
+                alignment: Alignment.center,
+              ),
+            ),
+            Positioned(
+              bottom: -250,
+              child: Column(
+                children: [
+                  Txt(
+                    "${northDirection.toStringAsFixed(0)}°N",
+                    fontSize: 48,
+                    color: Palette.black,
+                    fontWeight: FontWeight.w500,
+                  ),
+                  Txt(
+                    ref.watch(gpsControllerProvider).locality,
+                    fontSize: 32,
+                    color: Palette.black,
+                    fontWeight: FontWeight.w500,
+                  ),
+                  const SizedBox(height: 10),
+                  Txt(
+                    "Qibla ${qiblaDirection.toStringAsFixed(0)}°",
+                    fontSize: 32,
+                    color: Palette.black,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ],
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }

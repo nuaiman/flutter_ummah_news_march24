@@ -20,4 +20,6 @@ class Svgs {
   static const splash = '$assetPath/splash.svg';
   static const barometerBg = '$assetPath/barometerBg.svg';
   static const surahCard = '$assetPath/surahCard.svg';
+  static const needle = '$assetPath/needle.svg';
+  static const compass = '$assetPath/compass.svg';
 }

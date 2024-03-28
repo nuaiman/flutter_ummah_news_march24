@@ -1,6 +1,10 @@
+import 'dart:io';
+
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:imaan_barometer/features/deeds/controllers/deeds_controller.dart';
+import 'package:imaan_barometer/features/gps/controllers/gps_controller.dart';
 import 'package:imaan_barometer/features/home/screens/home_screen..dart';
 
 import '../../quran/controllers/quran_controller.dart';
@@ -8,14 +12,70 @@ import '../../quran/controllers/quran_controller.dart';
 class InitializationContoller extends StateNotifier<bool> {
   final DeedsController _deedsController;
   final QuranController _quranController;
+  final GpsController _gpsController;
   InitializationContoller({
     required DeedsController deedsController,
     required QuranController quranController,
+    required GpsController gpsController,
   })  : _deedsController = deedsController,
         _quranController = quranController,
+        _gpsController = gpsController,
         super(false);
 
   void getAllDeeds(BuildContext context) async {
+    final locationPermission = await _gpsController.checkLocationPermission();
+
+    if (!locationPermission) {
+      if (context.mounted) {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('Location Permission'),
+            content: const Text(
+                'Please enable location service and allow lcoation permission from settings.'),
+            actions: [
+              TextButton(
+                  onPressed: () {
+                    exit(0);
+                  },
+                  child: const Text('Close')),
+            ],
+          ),
+        );
+      }
+      return;
+    }
+
+    final location = await _gpsController.getCurrentLocation();
+
+    if (location.latitude == 0 ||
+        location.longitude == 0 ||
+        location.street == '' ||
+        location.locality == '' ||
+        location.subAdministrativeArea == '' ||
+        location.administrativeArea == '' ||
+        location.country == '' ||
+        location.isoCountryCode == '') {
+      if (context.mounted) {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('Location Error'),
+            content: const Text(
+                'Couldn\'t get current location details. Please restart..'),
+            actions: [
+              TextButton(
+                  onPressed: () {
+                    exit(0);
+                  },
+                  child: const Text('Close')),
+            ],
+          ),
+        );
+      }
+      return;
+    }
+
     await _deedsController.loadDeeds();
     if (context.mounted) {
       await _quranController.loadQuranSurahs(context);
@@ -35,9 +95,11 @@ final initializationProvider =
     StateNotifierProvider<InitializationContoller, bool>((ref) {
   final deedsController = ref.watch(deedsProvider.notifier);
   final quranController = ref.watch(quranProvider.notifier);
+  final gpsController = ref.watch(gpsControllerProvider.notifier);
   return InitializationContoller(
     deedsController: deedsController,
     quranController: quranController,
+    gpsController: gpsController,
   );
 });
 
