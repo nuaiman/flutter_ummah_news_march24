@@ -6,7 +6,8 @@ import 'txt.dart';
 
 class GreenAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
-  const GreenAppBar({super.key, required this.title});
+  final PreferredSize? preferredSizeWidget;
+  const GreenAppBar({super.key, required this.title, this.preferredSizeWidget});
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight + 10);
@@ -39,6 +40,7 @@ class GreenAppBar extends StatelessWidget implements PreferredSizeWidget {
           ),
         ),
       ],
+      bottom: preferredSizeWidget,
       flexibleSpace: Container(
         decoration: const BoxDecoration(
           image: DecorationImage(
