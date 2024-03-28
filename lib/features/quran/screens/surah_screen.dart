@@ -3,8 +3,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:imaan_barometer/core/constants/palette.dart';
 import 'package:imaan_barometer/models/quran.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
-
-import '../../../core/common/widgets/green_appbar.dart';
 import '../../../core/common/widgets/txt.dart';
 import '../../../core/constants/pngs.dart';
 import '../../../core/constants/svgs.dart';
@@ -18,16 +16,47 @@ class SurahScreen extends StatefulWidget {
         ),
       );
 
-  const SurahScreen({Key? key, required this.surah}) : super(key: key);
+  const SurahScreen({super.key, required this.surah});
 
   @override
-  _SurahScreenState createState() => _SurahScreenState();
+  SurahScreenState createState() => SurahScreenState();
 }
 
-class _SurahScreenState extends State<SurahScreen> {
+class SurahScreenState extends State<SurahScreen> {
   final ItemScrollController itemScrollController = ItemScrollController();
   final ItemPositionsListener itemPositionsListener =
       ItemPositionsListener.create();
+
+  @override
+  void initState() {
+    super.initState();
+    itemPositionsListener.itemPositions.addListener(_scrollListener);
+  }
+
+  @override
+  void dispose() {
+    itemPositionsListener.itemPositions.removeListener(_scrollListener);
+    super.dispose();
+  }
+
+  void _scrollListener() {
+    final positions = itemPositionsListener.itemPositions.value;
+    int lastCrossedIndex = -1;
+
+    for (var position in positions) {
+      if (position.itemLeadingEdge < 0.3) {
+        if (position.index != 0) {
+          lastCrossedIndex = position.index;
+        }
+      } else {
+        break;
+      }
+    }
+
+    if (lastCrossedIndex != -1) {
+      print('Index of the latest item that crossed 0.3: $lastCrossedIndex');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -65,6 +94,7 @@ class _SurahScreenState extends State<SurahScreen> {
         body: Padding(
           padding: const EdgeInsets.only(left: 16, right: 16),
           child: ScrollablePositionedList.builder(
+            initialScrollIndex: 0,
             itemScrollController: itemScrollController,
             itemPositionsListener: itemPositionsListener,
             itemCount: widget.surah.verses.length + 1,
@@ -133,11 +163,9 @@ class _SurahScreenState extends State<SurahScreen> {
                       ],
                     ),
                   ],
-                ); // Replace YourStaticItemWidget with your widget
+                );
               } else {
-                // Return dynamic items
-                final verse = widget.surah.verses[
-                    index - 1]; // Subtract 1 to adjust for the static item
+                final verse = widget.surah.verses[index - 1];
                 return Card(
                   color: Palette.liteGrey,
                   surfaceTintColor: Palette.liteGrey,
@@ -209,63 +237,5 @@ class _SurahScreenState extends State<SurahScreen> {
         ),
       ),
     );
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    itemPositionsListener.itemPositions.addListener(_scrollListener);
-  }
-
-  @override
-  void dispose() {
-    itemPositionsListener.itemPositions.removeListener(_scrollListener);
-    super.dispose();
-  }
-
-  // void _scrollListener() {
-  //   final positions = itemPositionsListener.itemPositions.value;
-  //   // Loop through positions to get the visible items
-  //   for (var position in positions) {
-  //     print('Item at index ${position.index} is ${position.itemLeadingEdge}');
-  //   }
-  // }
-
-  // void _scrollListener() {
-  //   final positions = itemPositionsListener.itemPositions.value;
-
-  //   for (var position in positions) {
-  //     final itemLeadingEdge = position.itemLeadingEdge ?? 0;
-
-  //     // Check if the itemLeadingEdge is within the desired range
-  //     if (itemLeadingEdge >= 0 && itemLeadingEdge <= 0.1) {
-  //       print('Item at index ${position.index} is within the range 0 to 0.1');
-  //       break; // To ensure we only print the first item within the range
-  //     }
-  //   }
-  // }
-
-  // void _scrollListener() {
-  //   final positions = itemPositionsListener.itemPositions.value;
-  //   final firstPosition = positions.isNotEmpty ? positions.first : null;
-
-  //   if (firstPosition != null && firstPosition.index == 0) {
-  //     final itemLeadingEdge = firstPosition.itemLeadingEdge ?? 0;
-
-  //     // Check if the itemLeadingEdge is within the desired range
-  //     if (itemLeadingEdge >= 0 && itemLeadingEdge <= 0.1) {
-  //       print('Item at index 0 is within the range 0 to 0.1');
-  //     }
-  //   }
-  // }
-
-  void _scrollListener() {
-    final positions = itemPositionsListener.itemPositions.value;
-
-    for (var position in positions) {
-      if (position.index == 1) {
-        print('Position of item at index 1: ${position.itemLeadingEdge}');
-      }
-    }
   }
 }
