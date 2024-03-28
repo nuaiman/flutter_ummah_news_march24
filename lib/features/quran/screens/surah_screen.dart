@@ -1,28 +1,36 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:imaan_barometer/core/constants/palette.dart';
+import 'package:imaan_barometer/features/quran/controllers/quran_controller.dart';
 import 'package:imaan_barometer/models/quran.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import '../../../core/common/widgets/txt.dart';
 import '../../../core/constants/pngs.dart';
 import '../../../core/constants/svgs.dart';
 
-class SurahScreen extends StatefulWidget {
+class SurahScreen extends ConsumerStatefulWidget {
   final QuranSurah surah;
+  final int verseId;
 
-  static route({required QuranSurah surah}) => MaterialPageRoute(
+  static route({required QuranSurah surah, int? verseId}) => MaterialPageRoute(
         builder: (context) => SurahScreen(
           surah: surah,
+          verseId: verseId ?? 0,
         ),
       );
 
-  const SurahScreen({super.key, required this.surah});
+  const SurahScreen({
+    super.key,
+    required this.surah,
+    this.verseId = 0,
+  });
 
   @override
   SurahScreenState createState() => SurahScreenState();
 }
 
-class SurahScreenState extends State<SurahScreen> {
+class SurahScreenState extends ConsumerState<SurahScreen> {
   final ItemScrollController itemScrollController = ItemScrollController();
   final ItemPositionsListener itemPositionsListener =
       ItemPositionsListener.create();
@@ -44,7 +52,7 @@ class SurahScreenState extends State<SurahScreen> {
     int lastCrossedIndex = -1;
 
     for (var position in positions) {
-      if (position.itemLeadingEdge < 0.3) {
+      if (position.itemLeadingEdge < 0.8) {
         if (position.index != 0) {
           lastCrossedIndex = position.index;
         }
@@ -54,7 +62,10 @@ class SurahScreenState extends State<SurahScreen> {
     }
 
     if (lastCrossedIndex != -1) {
-      print('Index of the latest item that crossed 0.3: $lastCrossedIndex');
+      ref
+          .read(quranProvider.notifier)
+          .saveSurahVerseToSharedPreferences(widget.surah.id, lastCrossedIndex);
+      // print('Index of the latest item that crossed 0.8: $lastCrossedIndex');
     }
   }
 
@@ -94,7 +105,7 @@ class SurahScreenState extends State<SurahScreen> {
         body: Padding(
           padding: const EdgeInsets.only(left: 16, right: 16),
           child: ScrollablePositionedList.builder(
-            initialScrollIndex: 0,
+            initialScrollIndex: widget.verseId,
             itemScrollController: itemScrollController,
             itemPositionsListener: itemPositionsListener,
             itemCount: widget.surah.verses.length + 1,

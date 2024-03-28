@@ -65,3 +65,10 @@ class QuranVerse {
     );
   }
 }
+
+class SavedSurahVerse {
+  final QuranSurah surah;
+  final int verseId;
+
+  SavedSurahVerse({required this.surah, required this.verseId});
+}
