@@ -1,19 +1,23 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:imaan_barometer/core/constants/pngs.dart';
 import 'package:imaan_barometer/features/deeds/screens/deeds_screen.dart';
 import 'package:imaan_barometer/features/qibla/screens/qibla_screen.dart';
 import 'package:imaan_barometer/features/quran/screens/quran_screen.dart';
+import 'package:imaan_barometer/features/salah/screens/salah_screen.dart';
+import 'package:intl/intl.dart';
 import 'package:top_modal_sheet/top_modal_sheet.dart';
 
 import '../../../core/constants/palette.dart';
 import '../../../core/constants/svgs.dart';
+import '../../salah/controllers/salah_controller.dart';
 import '../widgets/grid_item_tile.dart';
 import '../widgets/top_sheet.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends ConsumerWidget {
   static route() => MaterialPageRoute(
         builder: (context) => const HomeScreen(),
       );
@@ -31,7 +35,13 @@ class HomeScreen extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    ref.read(salahProvider.notifier).getPrayerTimes();
+    final salah = ref.watch(salahProvider);
+    final nextSalah =
+        ref.read(salahProvider.notifier).getNextSalah(DateTime.now());
+    Duration remainingTime =
+        ref.read(salahProvider.notifier).updateRemainingTime();
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
@@ -140,7 +150,9 @@ class HomeScreen extends StatelessWidget {
                       GridItemTile(
                         label: 'Salah',
                         svgPath: Svgs.salah,
-                        onTap: () {},
+                        onTap: () {
+                          Navigator.of(context).push(SalahScreen.route());
+                        },
                       ),
                     ],
                   ),
@@ -167,8 +179,8 @@ class HomeScreen extends StatelessWidget {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              const Text(
-                                'Next Prayer in 7:14',
+                              Text(
+                                'Next Prayer in ${remainingTime.inHours}:${(remainingTime.inMinutes.remainder(60)).toString().padLeft(2, '0')}:${(remainingTime.inSeconds.remainder(60)).toString().padLeft(2, '0')}',
                                 style: TextStyle(
                                   color: Palette.white,
                                   fontSize: 20,
@@ -180,12 +192,12 @@ class HomeScreen extends StatelessWidget {
                         ),
                       ),
                       const Spacer(),
-                      const Padding(
+                      Padding(
                         padding: EdgeInsets.only(left: 32.0),
                         child: Align(
                           alignment: Alignment.centerLeft,
                           child: Text(
-                            'Isha - 7:26 PM',
+                            '${nextSalah.nameEn} ${DateFormat.jm().format(nextSalah.time)}',
                             style: TextStyle(
                               color: Palette.black,
                               fontSize: 40,

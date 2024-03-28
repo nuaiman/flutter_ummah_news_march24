@@ -22,4 +22,5 @@ class Svgs {
   static const surahCard = '$assetPath/surahCard.svg';
   static const needle = '$assetPath/needle.svg';
   static const compass = '$assetPath/compass.svg';
+  static const notificationBlack = '$assetPath/notificationBlack.svg';
 }

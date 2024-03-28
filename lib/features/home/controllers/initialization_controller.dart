@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:imaan_barometer/features/deeds/controllers/deeds_controller.dart';
 import 'package:imaan_barometer/features/gps/controllers/gps_controller.dart';
 import 'package:imaan_barometer/features/home/screens/home_screen..dart';
+import 'package:imaan_barometer/features/salah/controllers/salah_controller.dart';
 
 import '../../quran/controllers/quran_controller.dart';
 
@@ -13,13 +14,16 @@ class InitializationContoller extends StateNotifier<bool> {
   final DeedsController _deedsController;
   final QuranController _quranController;
   final GpsController _gpsController;
+  final SalahController _salahController;
   InitializationContoller({
     required DeedsController deedsController,
     required QuranController quranController,
     required GpsController gpsController,
+    required SalahController salahController,
   })  : _deedsController = deedsController,
         _quranController = quranController,
         _gpsController = gpsController,
+        _salahController = salahController,
         super(false);
 
   void getAllDeeds(BuildContext context) async {
@@ -81,6 +85,7 @@ class InitializationContoller extends StateNotifier<bool> {
       await _quranController.loadQuranSurahs(context);
     }
     await _quranController.getSurahFromSharedPreferences();
+
     if (context.mounted) {
       Navigator.of(context).pushAndRemoveUntil(
         HomeScreen.route(),
@@ -96,10 +101,12 @@ final initializationProvider =
   final deedsController = ref.watch(deedsProvider.notifier);
   final quranController = ref.watch(quranProvider.notifier);
   final gpsController = ref.watch(gpsControllerProvider.notifier);
+  final salahController = ref.watch(salahProvider.notifier);
   return InitializationContoller(
     deedsController: deedsController,
     quranController: quranController,
     gpsController: gpsController,
+    salahController: salahController,
   );
 });
 
