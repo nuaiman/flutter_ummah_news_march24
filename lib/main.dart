@@ -6,10 +6,9 @@ import 'package:imaan_barometer/features/home/screens/initialization_screen.dart
 import 'core/constants/palette.dart';
 
 void main() async {
-  SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-    statusBarColor:
-        Colors.transparent, // Change this to your desired status bar color
-    statusBarIconBrightness: Brightness.dark, // Set this to Brightness.dark
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark.copyWith(
+    statusBarIconBrightness: Brightness.dark,
   ));
   runApp(const ProviderScope(child: BarometerOfImaan()));
 }
@@ -22,9 +21,6 @@ class BarometerOfImaan extends StatelessWidget {
       title: 'Barometer of Imaan',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: Palette.green,
-        ),
         useMaterial3: true,
       ),
       home: const InitializationScreen(),

@@ -6,6 +6,7 @@ import 'package:imaan_barometer/features/quran/controllers/quran_controller.dart
 import 'package:imaan_barometer/features/quran/screens/quran_screen.dart';
 import 'package:imaan_barometer/models/quran.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
+import '../../../core/common/widgets/transparent_appbar.dart';
 import '../../../core/common/widgets/txt.dart';
 import '../../../core/constants/pngs.dart';
 import '../../../core/constants/svgs.dart';
@@ -81,171 +82,163 @@ class SurahScreenState extends ConsumerState<SurahScreen> {
       ),
       child: Scaffold(
         backgroundColor: Colors.transparent,
-        appBar: AppBar(
-          automaticallyImplyLeading: false,
-          backgroundColor: Colors.transparent,
-          surfaceTintColor: Colors.transparent,
-          elevation: 0,
-          leading: IconButton(
-            onPressed: () {
-              ref.read(quranProvider.notifier).updateState();
-              Navigator.of(context).pop();
-            },
-            icon: SvgPicture.asset(Svgs.backButton),
-          ),
-          title: Txt(
-            widget.surah.transliterationEn,
-            fontSize: 24,
-          ),
-          actions: [
-            IconButton(
-              onPressed: () {},
-              icon: SvgPicture.asset(Svgs.menu),
-            ),
-          ],
-        ),
         body: Padding(
-          padding: const EdgeInsets.only(left: 16, right: 16),
-          child: ScrollablePositionedList.builder(
-            initialScrollIndex: widget.verseId,
-            itemScrollController: itemScrollController,
-            itemPositionsListener: itemPositionsListener,
-            itemCount: widget.surah.verses.length + 1,
-            itemBuilder: (context, index) {
-              if (index == 0) {
-                return Column(
-                  children: [
-                    Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        SvgPicture.asset(Svgs.surahCard),
-                        Positioned(
-                          child: Padding(
-                            padding: const EdgeInsets.only(
-                                left: 12, right: 12, bottom: 12),
-                            child: Column(
-                              children: [
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Txt(
-                                      widget.surah.transliterationEn,
-                                      color: Palette.white,
-                                      fontSize: 24,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                    Txt(
-                                      widget.surah.name,
-                                      color: Palette.white,
-                                      fontSize: 24,
-                                      fontWeight: FontWeight.w500,
-                                    )
-                                  ],
-                                ),
-                                const SizedBox(height: 8),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    Txt(
-                                      widget.surah.translationEn,
-                                      color: Palette.white,
-                                      fontSize: 18,
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: 4),
-                                const Divider(
-                                  color: Palette.white,
-                                ),
-                                const SizedBox(height: 4),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    Txt(
-                                      'Total Verse: ${widget.surah.verses.length}',
-                                      color: Palette.white,
-                                      fontSize: 18,
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                );
-              } else {
-                final verse = widget.surah.verses[index - 1];
-                return Card(
-                  color: Palette.liteGrey,
-                  surfaceTintColor: Palette.liteGrey,
-                  child: Padding(
-                    padding: const EdgeInsets.all(12.0),
-                    child: Column(
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Stack(
-                              alignment: Alignment.center,
-                              children: [
-                                SvgPicture.asset(
-                                  Svgs.counterFill,
-                                ),
-                                Txt(
-                                  verse.id.toString(),
-                                  color: Palette.white,
-                                  fontSize: 14,
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Expanded(
-                                child: Txt(
-                              verse.text,
-                              fontSize: 22,
-                              color: Palette.green,
-                              textDirection: TextDirection.rtl,
-                            )),
-                          ],
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 16),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
+          padding: const EdgeInsets.only(left: 6, right: 6),
+          child: Column(
+            children: [
+              TransparentAppBar(
+                text: widget.surah.transliterationEn,
+                onBackPresses: () {
+                  ref.read(quranProvider.notifier).updateState();
+                },
+              ),
+              Expanded(
+                child: ScrollablePositionedList.builder(
+                  initialScrollIndex: widget.verseId,
+                  itemScrollController: itemScrollController,
+                  itemPositionsListener: itemPositionsListener,
+                  itemCount: widget.surah.verses.length + 1,
+                  itemBuilder: (context, index) {
+                    if (index == 0) {
+                      return Column(
+                        children: [
+                          Stack(
+                            alignment: Alignment.center,
                             children: [
-                              Expanded(
-                                  child: Txt(
-                                verse.transliterationEn,
-                                fontSize: 20,
-                                fontWeight: FontWeight.w500,
-                              )),
+                              SvgPicture.asset(Svgs.surahCard),
+                              Positioned(
+                                child: Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 12, right: 12, bottom: 12),
+                                  child: Column(
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Txt(
+                                            widget.surah.transliterationEn,
+                                            color: Palette.white,
+                                            fontSize: 24,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                          Txt(
+                                            widget.surah.name,
+                                            color: Palette.white,
+                                            fontSize: 24,
+                                            fontWeight: FontWeight.w500,
+                                          )
+                                        ],
+                                      ),
+                                      const SizedBox(height: 8),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          Txt(
+                                            widget.surah.translationEn,
+                                            color: Palette.white,
+                                            fontSize: 18,
+                                          ),
+                                        ],
+                                      ),
+                                      const SizedBox(height: 4),
+                                      const Divider(
+                                        color: Palette.white,
+                                      ),
+                                      const SizedBox(height: 4),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          Txt(
+                                            'Total Verse: ${widget.surah.verses.length}',
+                                            color: Palette.white,
+                                            fontSize: 18,
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      );
+                    } else {
+                      final verse = widget.surah.verses[index - 1];
+                      return Card(
+                        color: Palette.liteGrey,
+                        surfaceTintColor: Palette.liteGrey,
+                        child: Padding(
+                          padding: const EdgeInsets.all(12.0),
+                          child: Column(
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Stack(
+                                    alignment: Alignment.center,
+                                    children: [
+                                      SvgPicture.asset(
+                                        Svgs.counterFill,
+                                      ),
+                                      Txt(
+                                        verse.id.toString(),
+                                        color: Palette.white,
+                                        fontSize: 14,
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Expanded(
+                                      child: Txt(
+                                    verse.text,
+                                    fontSize: 22,
+                                    color: Palette.green,
+                                    textDirection: TextDirection.rtl,
+                                  )),
+                                ],
+                              ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 16),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Expanded(
+                                        child: Txt(
+                                      verse.transliterationEn,
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w500,
+                                    )),
+                                  ],
+                                ),
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Expanded(
+                                      child: Txt(
+                                    verse.translationEn,
+                                    fontSize: 16,
+                                  )),
+                                ],
+                              ),
                             ],
                           ),
                         ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Expanded(
-                                child: Txt(
-                              verse.translationEn,
-                              fontSize: 16,
-                            )),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              }
-            },
+                      );
+                    }
+                  },
+                ),
+              ),
+            ],
           ),
         ),
       ),

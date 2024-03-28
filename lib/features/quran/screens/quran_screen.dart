@@ -143,6 +143,7 @@
 // }
 
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:imaan_barometer/core/common/widgets/txt.dart';
 import 'package:imaan_barometer/core/constants/palette.dart';
@@ -152,6 +153,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:imaan_barometer/features/quran/controllers/quran_controller.dart';
 import 'package:imaan_barometer/features/quran/screens/surah_screen.dart';
 
+import '../../../core/common/widgets/transparent_appbar.dart';
 import '../../../models/quran.dart';
 
 class QuranScreen extends ConsumerWidget {
@@ -174,34 +176,15 @@ class QuranScreen extends ConsumerWidget {
       ),
       child: Scaffold(
         backgroundColor: Colors.transparent,
-        appBar: AppBar(
-          automaticallyImplyLeading: false,
-          backgroundColor: Colors.transparent,
-          surfaceTintColor: Colors.transparent,
-          elevation: 0,
-          leading: IconButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            icon: SvgPicture.asset(Svgs.backButton),
-          ),
-          title: Txt(
-            'Al-Quran',
-            fontSize: 24,
-          ),
-          actions: [
-            IconButton(
-              onPressed: () {},
-              icon: SvgPicture.asset(Svgs.menu),
-            ),
-          ],
-        ),
         body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
+          padding: const EdgeInsets.symmetric(horizontal: 6),
           child: Column(
             children: [
+              const TransparentAppBar(
+                text: 'Al-Quran',
+              ),
               gottenSurah == null
-                  ? SizedBox.shrink()
+                  ? const SizedBox.shrink()
                   : Stack(
                       alignment: Alignment.center,
                       children: [

@@ -1,8 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:imaan_barometer/core/constants/pngs.dart';
 import 'package:imaan_barometer/features/deeds/screens/deeds_screen.dart';
+import 'package:imaan_barometer/features/qibla/screens/qibla_screen.dart';
 import 'package:imaan_barometer/features/quran/screens/quran_screen.dart';
 import 'package:top_modal_sheet/top_modal_sheet.dart';
 
@@ -130,7 +132,9 @@ class HomeScreen extends StatelessWidget {
                       GridItemTile(
                         label: 'Qibla',
                         svgPath: Svgs.qibla,
-                        onTap: () {},
+                        onTap: () {
+                          Navigator.of(context).push(QiblaScreen.route());
+                        },
                       ),
                       const SizedBox(width: 20),
                       GridItemTile(
