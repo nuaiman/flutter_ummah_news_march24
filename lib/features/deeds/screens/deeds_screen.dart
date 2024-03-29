@@ -1,13 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:imaan_barometer/core/constants/palette.dart';
-import 'package:imaan_barometer/core/constants/pngs.dart';
-import 'package:imaan_barometer/core/constants/svgs.dart';
 import 'package:intl/intl.dart';
 
 import '../../../core/common/widgets/transparent_appbar.dart';
-import '../../../core/common/widgets/txt.dart';
+import '../../../core/constants/pngs.dart';
 import '../../../models/deed.dart';
 import '../widgets/deed_tile.dart';
 

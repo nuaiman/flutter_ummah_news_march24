@@ -1,13 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:imaan_barometer/core/constants/pngs.dart';
-import 'package:imaan_barometer/features/deeds/screens/deeds_screen.dart';
-import 'package:imaan_barometer/features/qibla/screens/qibla_screen.dart';
-import 'package:imaan_barometer/features/quran/screens/quran_screen.dart';
-import 'package:imaan_barometer/features/salah/screens/salah_screen.dart';
+import '../../../core/constants/pngs.dart';
+import '../../deeds/screens/deeds_screen.dart';
+import '../../qibla/screens/qibla_screen.dart';
+import '../../quran/screens/quran_screen.dart';
+import '../../salah/screens/salah_screen.dart';
 import 'package:intl/intl.dart';
 import 'package:top_modal_sheet/top_modal_sheet.dart';
 
@@ -37,7 +36,7 @@ class HomeScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     ref.read(salahProvider.notifier).getPrayerTimes();
-    final salah = ref.watch(salahProvider);
+    ref.watch(salahProvider);
     final nextSalah =
         ref.read(salahProvider.notifier).getNextSalah(DateTime.now());
     Duration remainingTime =
@@ -112,7 +111,7 @@ class HomeScreen extends ConsumerWidget {
                   // ---------------------------------------------------------------
                 ],
               ),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
               Column(
                 children: [
                   Row(
@@ -181,7 +180,7 @@ class HomeScreen extends ConsumerWidget {
                             children: [
                               Text(
                                 'Next Prayer in ${remainingTime.inHours}:${(remainingTime.inMinutes.remainder(60)).toString().padLeft(2, '0')}:${(remainingTime.inSeconds.remainder(60)).toString().padLeft(2, '0')}',
-                                style: TextStyle(
+                                style: const TextStyle(
                                   color: Palette.white,
                                   fontSize: 20,
                                 ),
@@ -193,12 +192,12 @@ class HomeScreen extends ConsumerWidget {
                       ),
                       const Spacer(),
                       Padding(
-                        padding: EdgeInsets.only(left: 32.0),
+                        padding: const EdgeInsets.only(left: 32.0),
                         child: Align(
                           alignment: Alignment.centerLeft,
                           child: Text(
                             '${nextSalah.nameEn} ${DateFormat.jm().format(nextSalah.time)}',
-                            style: TextStyle(
+                            style: const TextStyle(
                               color: Palette.black,
                               fontSize: 40,
                             ),

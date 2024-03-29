@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:imaan_barometer/features/home/screens/initialization_screen.dart';
+import 'features/home/screens/initialization_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

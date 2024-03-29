@@ -4,25 +4,25 @@ import 'package:flutter/material.dart';
 import 'package:flutter_qiblah/flutter_qiblah.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:imaan_barometer/core/constants/palette.dart';
-import 'package:imaan_barometer/core/constants/svgs.dart';
-import 'package:imaan_barometer/features/gps/controllers/gps_controller.dart';
+import '../../../core/constants/palette.dart';
+import '../../../core/constants/svgs.dart';
+import '../../gps/controllers/gps_controller.dart';
 
 import '../../../core/common/widgets/transparent_appbar.dart';
 import '../../../core/common/widgets/txt.dart';
 import '../../../core/constants/pngs.dart';
 
-class QiblaScreen extends StatefulWidget {
+class QiblaScreen extends ConsumerStatefulWidget {
   static route() => MaterialPageRoute(
         builder: (context) => const QiblaScreen(),
       );
   const QiblaScreen({super.key});
 
   @override
-  State<QiblaScreen> createState() => _QiblaScreenState();
+  ConsumerState<QiblaScreen> createState() => _QiblaScreenState();
 }
 
-class _QiblaScreenState extends State<QiblaScreen> {
+class _QiblaScreenState extends ConsumerState<QiblaScreen> {
   final _deviceSupport = FlutterQiblah.androidDeviceSensorSupport();
   @override
   Widget build(BuildContext context) {
@@ -56,7 +56,7 @@ class _QiblaScreenState extends State<QiblaScreen> {
                     }
 
                     if (snapshot.data != null) {
-                      return QiblahCompass();
+                      return const QiblahCompass();
                       // return CircularProgressIndicator(
                       //   color: Colors.yellow,
                       // );
@@ -77,6 +77,7 @@ class _QiblaScreenState extends State<QiblaScreen> {
 }
 
 class QiblahCompass extends ConsumerWidget {
+  const QiblahCompass({super.key});
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return StreamBuilder<QiblahDirection>(
@@ -85,7 +86,6 @@ class QiblahCompass extends ConsumerWidget {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const CircularProgressIndicator();
         }
-
         if (!snapshot.hasData) {
           return const Center(
             child: Text(
@@ -93,12 +93,12 @@ class QiblahCompass extends ConsumerWidget {
             ),
           );
         }
-
         final qiblahDirection = snapshot.data!;
-        final northDirection = qiblahDirection.direction ?? 0;
-        final qiblaDirection =
-            qiblahDirection.qiblah != null ? qiblahDirection.qiblah % 360 : 0;
-
+        final northDirection = qiblahDirection.direction;
+        final qiblaDirection = qiblahDirection.qiblah % 360;
+        // final northDirection = qiblahDirection.direction ?? 0;
+        // final qiblaDirection =
+        //     qiblahDirection.qiblah != null ? qiblahDirection.qiblah % 360 : 0;
         return Stack(
           clipBehavior: Clip.none,
           alignment: Alignment.center,

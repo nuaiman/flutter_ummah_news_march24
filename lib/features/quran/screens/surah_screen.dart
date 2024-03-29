@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:imaan_barometer/core/constants/palette.dart';
-import 'package:imaan_barometer/features/quran/controllers/quran_controller.dart';
-import 'package:imaan_barometer/features/quran/screens/quran_screen.dart';
-import 'package:imaan_barometer/models/quran.dart';
+import '../../../core/constants/palette.dart';
+import '../controllers/quran_controller.dart';
+import '../../../models/quran.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import '../../../core/common/widgets/transparent_appbar.dart';
 import '../../../core/common/widgets/txt.dart';

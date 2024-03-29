@@ -1,10 +1,9 @@
 import 'dart:async';
 
 import 'package:adhan/adhan.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:imaan_barometer/features/gps/controllers/gps_controller.dart';
-import 'package:imaan_barometer/models/salah.dart';
+import '../../gps/controllers/gps_controller.dart';
+import '../../../models/salah.dart';
 
 import '../../../models/gps.dart';
 
@@ -13,12 +12,6 @@ class SalahController extends StateNotifier<List<Salah>> {
   SalahController({required GpsModel gpsController})
       : _gpsController = gpsController,
         super([]);
-
-  Duration updateRemainingTime() {
-    final now = DateTime.now();
-    final nextSalah = getNextSalah(now);
-    return nextSalah.time.difference(now);
-  }
 
   Future<void> getPrayerTimes() async {
     final myCoordinates =
@@ -41,14 +34,39 @@ class SalahController extends StateNotifier<List<Salah>> {
 
   Salah getNextSalah(DateTime now) {
     final salahList = state;
+    if (salahList.isEmpty) {
+      return Salah(
+          nameEn: 'No Salah', nameBn: 'কোন সালাত নেই', time: DateTime.now());
+    }
     salahList.sort((a, b) => a.time.compareTo(b.time));
     for (int i = 0; i < salahList.length; i++) {
       if (salahList[i].time.isAfter(now)) {
         return salahList[i];
       }
     }
-    return salahList[0];
+    final nextDay = salahList[0].time.add(const Duration(days: 1));
+    return Salah(
+        nameEn: salahList[0].nameEn,
+        nameBn: salahList[0].nameBn,
+        time: nextDay);
   }
+
+  Duration updateRemainingTime() {
+    final now = DateTime.now();
+    final nextSalah = getNextSalah(now);
+    return nextSalah.time.difference(now);
+  }
+
+  // Salah getNextSalah(DateTime now) {
+  //   final salahList = state;
+  //   salahList.sort((a, b) => a.time.compareTo(b.time));
+  //   for (int i = 0; i < salahList.length; i++) {
+  //     if (salahList[i].time.isAfter(now)) {
+  //       return salahList[i];
+  //     }
+  //   }
+  //   return salahList[0];
+  // }
 }
 // -----------------------------------------------------------------------------
 

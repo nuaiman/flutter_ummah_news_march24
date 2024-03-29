@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:imaan_barometer/core/common/widgets/txt.dart';
-import 'package:imaan_barometer/core/constants/palette.dart';
-import 'package:imaan_barometer/core/constants/svgs.dart';
-import 'package:imaan_barometer/features/salah/controllers/salah_controller.dart';
+import '../../../core/common/widgets/txt.dart';
+import '../../../core/constants/palette.dart';
+import '../../../core/constants/svgs.dart';
+import '../controllers/salah_controller.dart';
 import 'package:intl/intl.dart';
 
 import '../../../core/common/widgets/transparent_appbar.dart';
 import '../../../core/constants/pngs.dart';
 import '../../../models/salah.dart';
+import '../../gps/controllers/gps_controller.dart';
 
 class SalahScreen extends ConsumerWidget {
   static route() => MaterialPageRoute(
@@ -24,6 +25,7 @@ class SalahScreen extends ConsumerWidget {
         ref.read(salahProvider.notifier).getNextSalah(DateTime.now());
     Duration remainingTime =
         ref.read(salahProvider.notifier).updateRemainingTime();
+    final gps = ref.read(gpsControllerProvider);
     return Container(
       decoration: const BoxDecoration(
         image: DecorationImage(
@@ -38,8 +40,8 @@ class SalahScreen extends ConsumerWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              const TransparentAppBar(
-                text: 'Salah',
+              TransparentAppBar(
+                text: '${gps.locality}, ${gps.isoCountryCode}',
               ),
               Expanded(
                 child: SingleChildScrollView(

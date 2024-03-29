@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:imaan_barometer/core/common/widgets/txt.dart';
+import 'txt.dart';
 
 import '../../constants/svgs.dart';
 

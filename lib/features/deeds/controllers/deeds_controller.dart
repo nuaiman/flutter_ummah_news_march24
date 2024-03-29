@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:imaan_barometer/models/deed.dart';
+import '../../../models/deed.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class DeedsController extends StateNotifier<List<Deed>> {

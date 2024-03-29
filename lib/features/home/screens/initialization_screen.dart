@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:imaan_barometer/core/constants/palette.dart';
-import 'package:imaan_barometer/features/home/controllers/initialization_controller.dart';
+import '../../../core/constants/palette.dart';
+import '../controllers/initialization_controller.dart';
 
 import '../../../core/constants/pngs.dart';
 
