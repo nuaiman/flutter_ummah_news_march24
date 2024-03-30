@@ -58,136 +58,139 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           ),
         ),
         child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SafeArea(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SafeArea(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const IconButton(
+                        onPressed: null,
+                        icon: Icon(null),
+                      ),
+                      IconButton(
+                        onPressed: () => _showTopModal(context),
+                        icon: SvgPicture.asset(
+                          Svgs.dropDown,
+                        ),
+                      ),
+                      IconButton(
+                        onPressed: () {},
+                        icon: SvgPicture.asset(
+                          Svgs.menu,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                BarometerChart(),
+                const SizedBox(height: 8),
+                Column(
                   children: [
-                    const IconButton(
-                      onPressed: null,
-                      icon: Icon(null),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        GridItemTile(
+                          label: 'Deeds',
+                          svgPath: Svgs.deeds,
+                          onTap: () {
+                            Navigator.of(context).push(DeedsScreen.route());
+                          },
+                        ),
+                        const SizedBox(width: 20),
+                        GridItemTile(
+                          label: 'Quran',
+                          svgPath: Svgs.quran,
+                          onTap: () {
+                            Navigator.of(context).push(QuranScreen.route());
+                          },
+                        ),
+                      ],
                     ),
-                    IconButton(
-                      onPressed: () => _showTopModal(context),
-                      icon: SvgPicture.asset(
-                        Svgs.dropDown,
+                    const SizedBox(height: 20),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        GridItemTile(
+                          label: 'Qibla',
+                          svgPath: Svgs.qibla,
+                          onTap: () {
+                            Navigator.of(context).push(QiblaScreen.route());
+                          },
+                        ),
+                        const SizedBox(width: 20),
+                        GridItemTile(
+                          label: 'Salah',
+                          svgPath: Svgs.salah,
+                          onTap: () {
+                            Navigator.of(context).push(SalahScreen.route());
+                          },
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                NextPrayerTime(),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Ayah of The Day',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
-                    IconButton(
-                      onPressed: () {},
-                      icon: SvgPicture.asset(
-                        Svgs.menu,
+                    const SizedBox(height: 8),
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Palette.liteGrey,
+                        borderRadius: BorderRadius.circular(25),
+                      ),
+                      child: const Padding(
+                        padding: EdgeInsets.all(16.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    '1234324234oidfdfkgdfgj4523eorgjhdfkjghjkthqw4uirthjkpghasdjipgh',
+                                    softWrap: true,
+                                    style: TextStyle(
+                                      fontSize: 24,
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(width: 20),
+                                Icon(
+                                  CupertinoIcons.heart,
+                                  size: 40,
+                                )
+                              ],
+                            ),
+                            SizedBox(height: 20),
+                            Text(
+                              '[Quran 8:33]',
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ],
                 ),
-              ),
-              BarometerChart(),
-              const SizedBox(height: 8),
-              Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      GridItemTile(
-                        label: 'Deeds',
-                        svgPath: Svgs.deeds,
-                        onTap: () {
-                          Navigator.of(context).push(DeedsScreen.route());
-                        },
-                      ),
-                      const SizedBox(width: 20),
-                      GridItemTile(
-                        label: 'Quran',
-                        svgPath: Svgs.quran,
-                        onTap: () {
-                          Navigator.of(context).push(QuranScreen.route());
-                        },
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 20),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      GridItemTile(
-                        label: 'Qibla',
-                        svgPath: Svgs.qibla,
-                        onTap: () {
-                          Navigator.of(context).push(QiblaScreen.route());
-                        },
-                      ),
-                      const SizedBox(width: 20),
-                      GridItemTile(
-                        label: 'Salah',
-                        svgPath: Svgs.salah,
-                        onTap: () {
-                          Navigator.of(context).push(SalahScreen.route());
-                        },
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-              NextPrayerTime(),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'Ayah of The Day',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Palette.liteGrey,
-                      borderRadius: BorderRadius.circular(25),
-                    ),
-                    child: const Padding(
-                      padding: EdgeInsets.all(16.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Expanded(
-                                child: Text(
-                                  '1234324234oidfdfkgdfgj4523eorgjhdfkjghjkthqw4uirthjkpghasdjipgh',
-                                  softWrap: true,
-                                  style: TextStyle(
-                                    fontSize: 24,
-                                  ),
-                                ),
-                              ),
-                              SizedBox(width: 20),
-                              Icon(
-                                CupertinoIcons.heart,
-                                size: 40,
-                              )
-                            ],
-                          ),
-                          SizedBox(height: 20),
-                          Text(
-                            '[Quran 8:33]',
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

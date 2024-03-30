@@ -18,7 +18,10 @@ class GridItemTile extends StatelessWidget {
       onTap: onTap,
       child: Column(
         children: [
-          SvgPicture.asset(svgPath),
+          SvgPicture.asset(
+            svgPath,
+            height: 150,
+          ),
           const SizedBox(height: 10),
           Text(label),
         ],

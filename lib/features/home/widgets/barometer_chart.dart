@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -14,11 +15,37 @@ class BarometerChart extends ConsumerWidget {
     super.key,
   });
 
+  double calculatePercentageDeedsDone(List<Deed> deeds) {
+    if (deeds.isEmpty) {
+      return 0.0;
+    }
+    int totalDeeds = 7;
+    int doneDeeds = deeds.where((deed) => deed.isDone).length;
+    return (doneDeeds / totalDeeds) * 100;
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     ref.watch(deedsProvider);
     final Map<String, List<Deed>> deeds =
         ref.read(deedsProvider.notifier).getLast7DaysDeeds();
+    final todayDeeds = ref.read(deedsProvider.notifier).getDeedsForToday();
+    final percentage = calculatePercentageDeedsDone(todayDeeds);
+
+    String getStatus(double percentage) {
+      if (deeds.isEmpty) {
+        return 'Status: Poor';
+      } else if (percentage <= 25) {
+        return 'Status: Below Avegare';
+      } else if (percentage <= 50) {
+        return 'Status: Avegare';
+      } else if (percentage <= 75) {
+        return 'Status: Good';
+      } else {
+        return 'Status: Excellent';
+      }
+    }
+
     return Stack(
       clipBehavior: Clip.none,
       alignment: Alignment.center,
@@ -31,37 +58,55 @@ class BarometerChart extends ConsumerWidget {
           children: [
             SvgPicture.asset(
               Svgs.barometerChart,
-              height: 160,
+              height: 150,
             ),
             BarometerChartBar(
-              xPosition: 9,
+              xPosition: 7,
               deeds: deeds['6DaysAgo'] ?? [],
             ),
             BarometerChartBar(
-              xPosition: 51,
+              xPosition: 46,
               deeds: deeds['5DaysAgo'] ?? [],
             ),
             BarometerChartBar(
-              xPosition: 93,
+              xPosition: 86,
               deeds: deeds['4DaysAgo'] ?? [],
             ),
             BarometerChartBar(
-              xPosition: 136,
+              xPosition: 126,
               deeds: deeds['3DaysAgo'] ?? [],
             ),
             BarometerChartBar(
-              xPosition: 178,
+              xPosition: 166,
               deeds: deeds['2DaysAgo'] ?? [],
             ),
             BarometerChartBar(
-              xPosition: 221,
+              xPosition: 205,
               deeds: deeds['1DayAgo'] ?? [],
             ),
             BarometerChartBar(
-              xPosition: 263,
+              xPosition: 246,
               deeds: deeds['Today'] ?? [],
             ),
           ],
+        ),
+        Positioned(
+          top: 50,
+          left: 18,
+          child: Txt(
+            'Today ${DateFormat('dd MMMM, yyyy').format(DateTime.now())}',
+            color: Palette.white,
+            fontSize: 20,
+          ),
+        ),
+        Positioned(
+          bottom: 50,
+          left: 18,
+          child: Txt(
+            getStatus(percentage),
+            color: Palette.white,
+            fontSize: 17,
+          ),
         ),
       ],
     );
