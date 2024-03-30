@@ -251,39 +251,70 @@ class QuranScreen extends ConsumerWidget {
                   primary: false,
                   shrinkWrap: true,
                   itemCount: quran.length,
-                  separatorBuilder: (context, index) => const Divider(),
+                  separatorBuilder: (context, index) =>
+                      const SizedBox(height: 20),
                   itemBuilder: (context, index) {
                     final surah = quran[index];
-                    return ListTile(
-                      onTap: () {
-                        Navigator.of(context).push(
-                          SurahScreen.route(surah: surah),
-                        );
-                      },
-                      leading: Stack(
-                        alignment: Alignment.center,
-                        children: [
-                          SvgPicture.asset(Svgs.counterStroke),
-                          Txt(
-                            (index + 1).toString(),
-                            fontSize: 20,
-                            color: Palette.green,
-                          ),
-                        ],
+                    return Container(
+                      decoration: BoxDecoration(
+                        color: Palette.liteGrey,
+                        borderRadius: BorderRadius.circular(17),
                       ),
-                      title: Txt(
-                        surah.transliterationEn,
-                        fontSize: 24,
-                        fontWeight: FontWeight.w600,
-                      ),
-                      subtitle: Txt(
-                        surah.translationEn,
-                        fontSize: 18,
-                        color: Palette.grey,
-                      ),
-                      trailing: Txt(
-                        surah.name,
-                        fontSize: 24,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Stack(
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(17),
+                                border: Border.all(color: Palette.green),
+                              ),
+                              child: ListTile(
+                                onTap: () {
+                                  Navigator.of(context).push(
+                                    SurahScreen.route(surah: surah),
+                                  );
+                                },
+                                leading: Stack(
+                                  alignment: Alignment.center,
+                                  children: [
+                                    SvgPicture.asset(Svgs.counterStroke),
+                                    Txt(
+                                      (index + 1).toString(),
+                                      fontSize: 20,
+                                      color: Palette.green,
+                                    ),
+                                  ],
+                                ),
+                                title: Txt(
+                                  surah.transliterationEn,
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                                subtitle: Txt(
+                                  surah.translationEn,
+                                  fontSize: 18,
+                                  color: Palette.grey,
+                                ),
+                                trailing: Txt(
+                                  surah.name,
+                                  fontSize: 24,
+                                ),
+                              ),
+                            ),
+                            Positioned(
+                              top: 0,
+                              right: 0,
+                              child: SvgPicture.asset(Svgs.cornerDecorTopRight),
+                            ),
+                            Positioned(
+                              bottom: 0,
+                              left: 0,
+                              child:
+                                  SvgPicture.asset(Svgs.cornerDecorBottomLeft),
+                            ),
+                          ],
+                        ),
                       ),
                     );
                   },

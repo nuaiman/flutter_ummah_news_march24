@@ -13,6 +13,7 @@ import 'package:top_modal_sheet/top_modal_sheet.dart';
 import '../../../core/constants/palette.dart';
 import '../../../core/constants/svgs.dart';
 import '../../salah/controllers/salah_controller.dart';
+import '../widgets/barometer_chart.dart';
 import '../widgets/grid_item_tile.dart';
 import '../widgets/top_sheet.dart';
 
@@ -86,41 +87,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   ],
                 ),
               ),
-              Stack(
-                children: [
-                  SvgPicture.asset(
-                    Svgs.barometerBg,
-                  ),
-                  // ---------------------------------------------------------------
-                  // Column(
-                  //   children: [
-                  //     SfCartesianChart(
-                  //         primaryXAxis: CategoryAxis(),
-                  //         primaryYAxis: NumericAxis(
-                  //             minimum: 0, maximum: 40, interval: 10),
-                  //         tooltipBehavior: TooltipBehavior(enable: true),
-                  //         series: <CartesianSeries<_ChartData, String>>[
-                  //           ColumnSeries<_ChartData, String>(
-                  //             dataSource: data,
-                  //             xValueMapper: (_ChartData data, _) => data.x,
-                  //             yValueMapper: (_ChartData data, _) => data.y,
-                  //             name: 'Gold',
-                  //             color: Color.fromRGBO(8, 142, 255, 1),
-                  //           )
-                  //         ]),
-                  //     // -----------------
-                  //     // Txt(
-                  //     //   'Today',
-                  //     //   fontSize: 20,
-                  //     // ),
-                  //   ],
-                  // ),
-
-                  // DeedsChart(),
-
-                  // ---------------------------------------------------------------
-                ],
-              ),
+              BarometerChart(),
               const SizedBox(height: 8),
               Column(
                 children: [

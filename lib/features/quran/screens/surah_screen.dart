@@ -92,11 +92,13 @@ class SurahScreenState extends ConsumerState<SurahScreen> {
                 },
               ),
               Expanded(
-                child: ScrollablePositionedList.builder(
+                child: ScrollablePositionedList.separated(
                   initialScrollIndex: widget.verseId,
                   itemScrollController: itemScrollController,
                   itemPositionsListener: itemPositionsListener,
                   itemCount: widget.surah.verses.length + 1,
+                  separatorBuilder: (context, index) =>
+                      const SizedBox(height: 20),
                   itemBuilder: (context, index) {
                     if (index == 0) {
                       return Column(
@@ -167,67 +169,103 @@ class SurahScreenState extends ConsumerState<SurahScreen> {
                       );
                     } else {
                       final verse = widget.surah.verses[index - 1];
-                      return Card(
-                        color: Palette.liteGrey,
-                        surfaceTintColor: Palette.liteGrey,
+                      return Container(
+                        decoration: BoxDecoration(
+                          color: Palette.liteGrey,
+                          borderRadius: BorderRadius.circular(17),
+                        ),
                         child: Padding(
-                          padding: const EdgeInsets.all(12.0),
-                          child: Column(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Stack(
                             children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Stack(
-                                    alignment: Alignment.center,
-                                    children: [
-                                      SvgPicture.asset(
-                                        Svgs.counterFill,
-                                      ),
-                                      Txt(
-                                        verse.id.toString(),
-                                        color: Palette.white,
-                                        fontSize: 14,
-                                      ),
-                                    ],
+                              Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(17),
+                                  border: Border.all(color: Palette.green),
+                                ),
+                                child: Card(
+                                  color: Palette.liteGrey,
+                                  surfaceTintColor: Palette.liteGrey,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(12.0),
+                                    child: Column(
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: [
+                                            Stack(
+                                              alignment: Alignment.center,
+                                              children: [
+                                                SvgPicture.asset(
+                                                  Svgs.counterFill,
+                                                ),
+                                                Txt(
+                                                  verse.id.toString(),
+                                                  color: Palette.white,
+                                                  fontSize: 14,
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                        const SizedBox(height: 10),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: [
+                                            Expanded(
+                                                child: Txt(
+                                              verse.text,
+                                              fontSize: 22,
+                                              color: Palette.green,
+                                              textDirection: TextDirection.rtl,
+                                            )),
+                                          ],
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 16),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            children: [
+                                              Expanded(
+                                                  child: Txt(
+                                                verse.transliterationEn,
+                                                fontSize: 20,
+                                                fontWeight: FontWeight.w500,
+                                              )),
+                                            ],
+                                          ),
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: [
+                                            Expanded(
+                                                child: Txt(
+                                              verse.translationEn,
+                                              fontSize: 16,
+                                            )),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                ],
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Expanded(
-                                      child: Txt(
-                                    verse.text,
-                                    fontSize: 22,
-                                    color: Palette.green,
-                                    textDirection: TextDirection.rtl,
-                                  )),
-                                ],
-                              ),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 16),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    Expanded(
-                                        child: Txt(
-                                      verse.transliterationEn,
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.w500,
-                                    )),
-                                  ],
                                 ),
                               ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Expanded(
-                                      child: Txt(
-                                    verse.translationEn,
-                                    fontSize: 16,
-                                  )),
-                                ],
+                              Positioned(
+                                top: 0,
+                                right: 0,
+                                child:
+                                    SvgPicture.asset(Svgs.cornerDecorTopRight),
+                              ),
+                              Positioned(
+                                bottom: 0,
+                                left: 0,
+                                child: SvgPicture.asset(
+                                    Svgs.cornerDecorBottomLeft),
                               ),
                             ],
                           ),

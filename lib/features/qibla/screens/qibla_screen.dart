@@ -116,7 +116,7 @@ class QiblahCompass extends ConsumerWidget {
               alignment: Alignment.center,
               child: SvgPicture.asset(
                 Svgs.needle,
-                height: 150,
+                height: 190,
                 alignment: Alignment.center,
               ),
             ),

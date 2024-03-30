@@ -19,8 +19,11 @@ class Svgs {
   static const salah = '$assetPath/salah.svg';
   static const splash = '$assetPath/splash.svg';
   static const barometerBg = '$assetPath/barometerBg.svg';
+  static const barometerChart = '$assetPath/barometerChart.svg';
   static const surahCard = '$assetPath/surahCard.svg';
   static const needle = '$assetPath/needle.svg';
   static const compass = '$assetPath/compass.svg';
   static const notificationBlack = '$assetPath/notificationBlack.svg';
+  static const cornerDecorBottomLeft = '$assetPath/cornerDecorBottomLeft.svg';
+  static const cornerDecorTopRight = '$assetPath/cornerDecorTopRight.svg';
 }
