@@ -32,4 +32,6 @@ class Txt extends StatelessWidget {
       ),
     );
   }
+
+  substring(int i, int j) {}
 }
