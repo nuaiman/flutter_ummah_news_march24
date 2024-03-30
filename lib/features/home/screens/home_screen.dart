@@ -16,12 +16,17 @@ import '../../salah/controllers/salah_controller.dart';
 import '../widgets/grid_item_tile.dart';
 import '../widgets/top_sheet.dart';
 
-class HomeScreen extends ConsumerWidget {
+class HomeScreen extends ConsumerStatefulWidget {
   static route() => MaterialPageRoute(
         builder: (context) => const HomeScreen(),
       );
   const HomeScreen({super.key});
 
+  @override
+  ConsumerState<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends ConsumerState<HomeScreen> {
   Future<void> _showTopModal(BuildContext context) async {
     await showTopModalSheet(
       context,
@@ -34,13 +39,18 @@ class HomeScreen extends ConsumerWidget {
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  void initState() {
     ref.read(salahProvider.notifier).getPrayerTimes();
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     ref.watch(salahProvider);
     final nextSalah =
-        ref.read(salahProvider.notifier).getNextSalah(DateTime.now());
+        ref.watch(salahProvider.notifier).getNextSalah(DateTime.now());
     Duration remainingTime =
-        ref.read(salahProvider.notifier).updateRemainingTime();
+        ref.watch(salahProvider.notifier).updateRemainingTime();
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
