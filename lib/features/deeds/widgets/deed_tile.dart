@@ -32,7 +32,7 @@ class _DeedTileState extends ConsumerState<DeedTile> {
             ref.read(deedsProvider.notifier).markAsDone(widget.deed, value!);
           },
         ),
-        title: Txt(widget.deed.title),
+        title: Txt(widget.deed.titleEn),
         trailing: CircleAvatar(
           radius: 12,
           backgroundColor: Palette.grey,
