@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -19,7 +18,7 @@ class BarometerChart extends ConsumerWidget {
     if (deeds.isEmpty) {
       return 0.0;
     }
-    int totalDeeds = 7;
+    int totalDeeds = 77;
     int doneDeeds = deeds.where((deed) => deed.isDone).length;
     return (doneDeeds / totalDeeds) * 100;
   }
@@ -34,7 +33,7 @@ class BarometerChart extends ConsumerWidget {
 
     String getStatus(double percentage) {
       if (deeds.isEmpty) {
-        return 'Status: Poor';
+        return '';
       } else if (percentage <= 25) {
         return 'Status: Below Avegare';
       } else if (percentage <= 50) {
@@ -126,7 +125,7 @@ class BarometerChartBar extends StatelessWidget {
     if (deeds.isEmpty) {
       return 0.0;
     }
-    int totalDeeds = 7;
+    int totalDeeds = 77;
     int doneDeeds = deeds.where((deed) => deed.isDone).length;
     return (doneDeeds / totalDeeds) * 100;
   }
@@ -170,9 +169,9 @@ class BarometerChartBar extends StatelessWidget {
               ),
             ),
             width: 20,
-            height: deeds.isEmpty ? 0 : (131 * percentage / 100).clamp(0, 131),
+            height: deeds.isEmpty ? 0 : (123 * percentage / 100).clamp(0, 123),
           ),
-          const SizedBox(height: 5),
+          const SizedBox(height: 3),
           deeds.isEmpty
               ? const Txt('')
               : Txt(

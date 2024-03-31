@@ -279,7 +279,6 @@ class DeedsScreen extends StatelessWidget {
                       year: DateTime.now().year,
                     ),
                   ),
-                  //------------------------------------------------------------
                   DeedTile(
                     deed: Deed(
                       id: 19,
@@ -357,7 +356,6 @@ class DeedsScreen extends StatelessWidget {
                       year: DateTime.now().year,
                     ),
                   ),
-
                   DeedTile(
                     deed: Deed(
                       id: 25,
@@ -382,7 +380,6 @@ class DeedsScreen extends StatelessWidget {
                       year: DateTime.now().year,
                     ),
                   ),
-                  // -----------------------------------------------------------
                   DeedTile(
                     deed: Deed(
                       id: 27,
@@ -397,7 +394,6 @@ class DeedsScreen extends StatelessWidget {
                       year: DateTime.now().year,
                     ),
                   ),
-                  // -----------------------------------------------------------
                   DeedTile(
                     deed: Deed(
                       id: 28,
