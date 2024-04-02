@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:adhan/adhan.dart';
-import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:imaan_barometer/features/notifications/controllers/salah_notification_controller.dart';
 import '../../gps/controllers/gps_controller.dart';
 import '../../../models/salah.dart';
 
@@ -10,8 +10,12 @@ import '../../../models/gps.dart';
 
 class SalahController extends StateNotifier<List<Salah>> {
   final GpsModel _gpsController;
-  SalahController({required GpsModel gpsController})
+  final SalahNotificationController _salahNotificationController;
+  SalahController(
+      {required GpsModel gpsController,
+      required SalahNotificationController salahNotificationController})
       : _gpsController = gpsController,
+        _salahNotificationController = salahNotificationController,
         super([]);
 
   // Future<void> getPrayerTimes() async {
@@ -39,8 +43,6 @@ class SalahController extends StateNotifier<List<Salah>> {
     final params = CalculationMethod.karachi.getParameters();
     params.madhab = Madhab.hanafi;
     final prayerTimes = PrayerTimes.today(myCoordinates, params);
-
-    // Create notification content for each prayer time
     final salahList = [
       Salah(
         id: 0,
@@ -79,42 +81,32 @@ class SalahController extends StateNotifier<List<Salah>> {
         time: prayerTimes.isha,
       ),
     ];
-    Future.delayed(Duration(microseconds: 10), () {
+    Future.delayed(const Duration(microseconds: 10), () {
       state = salahList;
     });
-    // Cancel existing notifications for past salah times
+    await _salahNotificationController.initializeAlarms(salahList);
+    // await AwesomeNotifications().cancelAll();
     // salahList.forEach((salah) async {
     //   final notificationId = salah.id;
-
+    //   final scheduledTime = salah.time.subtract(const Duration(minutes: 15));
+    //   await AwesomeNotifications().createNotification(
+    //     content: NotificationContent(
+    //         id: notificationId,
+    //         channelKey: notificationId.toString(),
+    //         title: 'Prayer Reminder',
+    //         body: 'It\'s time for ${salah.nameEn} prayer.',
+    //         wakeUpScreen: true,
+    //         category: NotificationCategory.Alarm,
+    //         actionType: ActionType.DismissAction),
+    //     schedule: NotificationCalendar(
+    //       preciseAlarm: true,
+    //       repeats: true,
+    //       hour: scheduledTime.hour,
+    //       minute: scheduledTime.minute,
+    //       allowWhileIdle: true,
+    //     ),
+    //   );
     // });
-    await AwesomeNotifications().cancelAll();
-    // Schedule recurring notifications for each prayer time
-    salahList.forEach((salah) async {
-      final notificationId = salah.id;
-      final scheduledTime = salah.time.subtract(
-          const Duration(minutes: 15)); // Schedule 30 minutes before salah time
-      print(notificationId);
-      print(notificationId.toString());
-
-      await AwesomeNotifications().createNotification(
-        content: NotificationContent(
-          id: notificationId,
-          channelKey: notificationId.toString(),
-          title: 'Prayer Reminder',
-          body: 'It\'s time for ${salah.nameEn} prayer.',
-          wakeUpScreen: true,
-          category: NotificationCategory.Alarm,
-          // customSound: ,
-        ),
-        schedule: NotificationCalendar(
-          preciseAlarm: true,
-          repeats: true,
-          hour: scheduledTime.hour,
-          minute: scheduledTime.minute,
-          allowWhileIdle: true,
-        ),
-      );
-    });
   }
 
   Salah getNextSalah(DateTime now) {
@@ -168,5 +160,9 @@ class SalahController extends StateNotifier<List<Salah>> {
 final salahProvider =
     StateNotifierProvider<SalahController, List<Salah>>((ref) {
   final gpsController = ref.watch(gpsControllerProvider);
-  return SalahController(gpsController: gpsController);
+  final notificationController = ref.watch(salahNotificationProvider.notifier);
+  return SalahController(
+    gpsController: gpsController,
+    salahNotificationController: notificationController,
+  );
 });

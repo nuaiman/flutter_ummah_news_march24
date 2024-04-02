@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:imaan_barometer/features/language/controller/language_controller.dart';
+import 'package:imaan_barometer/features/notifications/controllers/salah_notification_controller.dart';
 import '../../deeds/controllers/deeds_controller.dart';
 import '../../gps/controllers/gps_controller.dart';
 import '../screens/home_screen.dart';
@@ -8,16 +10,22 @@ import '../screens/home_screen.dart';
 import '../../quran/controllers/quran_controller.dart';
 
 class InitializationContoller extends StateNotifier<bool> {
+  final LanguageController _languageController;
   final DeedsController _deedsController;
   final QuranController _quranController;
   final GpsController _gpsController;
+  final SalahNotificationController _salahNotificationController;
   InitializationContoller({
+    required LanguageController languageController,
     required DeedsController deedsController,
     required QuranController quranController,
     required GpsController gpsController,
-  })  : _deedsController = deedsController,
+    required SalahNotificationController salahNotificationController,
+  })  : _languageController = languageController,
+        _deedsController = deedsController,
         _quranController = quranController,
         _gpsController = gpsController,
+        _salahNotificationController = salahNotificationController,
         super(false);
 
   void getAllDeeds(BuildContext context) async {
@@ -71,7 +79,7 @@ class InitializationContoller extends StateNotifier<bool> {
     //   }
     //   return;
     // }
-
+    await _languageController.loadLanguage();
     await _gpsController.checkPermissionAndFetchLocation(context);
 
     await _deedsController.loadDeeds();
@@ -79,6 +87,8 @@ class InitializationContoller extends StateNotifier<bool> {
       await _quranController.loadQuranSurahs(context);
     }
     await _quranController.getSurahFromSharedPreferences();
+
+    await _salahNotificationController.loadSalahAlarms();
 
     if (context.mounted) {
       Navigator.of(context).pushAndRemoveUntil(
@@ -92,13 +102,18 @@ class InitializationContoller extends StateNotifier<bool> {
 
 final initializationProvider =
     StateNotifierProvider<InitializationContoller, bool>((ref) {
+  final languageController = ref.watch(languageIsEnglishProvider.notifier);
   final deedsController = ref.watch(deedsProvider.notifier);
   final quranController = ref.watch(quranProvider.notifier);
   final gpsController = ref.watch(gpsControllerProvider.notifier);
+  final salahNotificationController =
+      ref.watch(salahNotificationProvider.notifier);
   return InitializationContoller(
+    languageController: languageController,
     deedsController: deedsController,
     quranController: quranController,
     gpsController: gpsController,
+    salahNotificationController: salahNotificationController,
   );
 });
 

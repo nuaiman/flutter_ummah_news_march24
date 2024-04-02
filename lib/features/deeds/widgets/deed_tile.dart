@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/common/widgets/txt.dart';
 import '../../../core/constants/palette.dart';
 import '../../../models/deed.dart';
+import '../../language/controller/language_controller.dart';
 import '../controllers/deeds_controller.dart';
 
 class DeedTile extends ConsumerStatefulWidget {
@@ -22,6 +23,7 @@ class _DeedTileState extends ConsumerState<DeedTile> {
   @override
   Widget build(BuildContext context) {
     ref.watch(deedsProvider);
+    final languageIsEnglish = ref.watch(languageIsEnglishProvider);
     return Card(
       color: Palette.liteGrey,
       surfaceTintColor: Palette.liteGrey,
@@ -32,7 +34,8 @@ class _DeedTileState extends ConsumerState<DeedTile> {
             ref.read(deedsProvider.notifier).markAsDone(widget.deed, value!);
           },
         ),
-        title: Txt(widget.deed.titleEn),
+        title:
+            Txt(!languageIsEnglish ? widget.deed.titleBn : widget.deed.titleEn),
         trailing: CircleAvatar(
           radius: 12,
           backgroundColor: Palette.grey,
@@ -41,7 +44,11 @@ class _DeedTileState extends ConsumerState<DeedTile> {
             child: CircleAvatar(
               backgroundColor: Palette.white,
               child: Txt(
-                widget.deed.id.toString(),
+                !languageIsEnglish
+                    ? ref
+                        .read(languageIsEnglishProvider.notifier)
+                        .convertEnglishToBangla(widget.deed.id.toString())
+                    : widget.deed.id.toString(),
                 color: Palette.grey,
               ),
             ),

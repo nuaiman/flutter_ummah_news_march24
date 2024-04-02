@@ -1,15 +1,28 @@
 // import 'package:flutter_riverpod/flutter_riverpod.dart';
-// import 'package:imaan_barometer/models/salah.dart';
-// import 'package:imaan_barometer/models/salah_alarm.dart';
+// import 'package:shared_preferences/shared_preferences.dart';
 
-// class NotificationController extends StateNotifier<List<SalahAlarm>> {
-//   NotificationController() : super([]);
+// class NotificationController extends StateNotifier<bool> {
+//   NotificationController() : super(true) {
+//     loadNotificationPref();
+//   }
 
-//   void setAlarmFor(SalahAlarm alarm, Salah salah) async {}
+//   static const _key = 'notification';
+
+//   Future<void> loadNotificationPref() async {
+//     final prefs = await SharedPreferences.getInstance();
+//     final salahAlarms = prefs.getBool(_key) ?? true;
+//     state = salahAlarms;
+//   }
+
+//   Future<void> saveNotificationPref(bool newValue) async {
+//     final prefs = await SharedPreferences.getInstance();
+//     await prefs.setBool(_key, newValue);
+//     state = newValue;
+//   }
 // }
 // // -----------------------------------------------------------------------------
 
-// final alarmProvider =
-//     StateNotifierProvider<NotificationController, List<SalahAlarm>>((ref) {
+// final notificationProvider =
+//     StateNotifierProvider<NotificationController, bool>((ref) {
 //   return NotificationController();
 // });

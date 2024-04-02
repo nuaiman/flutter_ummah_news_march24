@@ -8,6 +8,7 @@ import 'package:intl/intl.dart';
 import '../../../core/constants/svgs.dart';
 import '../../../models/deed.dart';
 import '../../deeds/controllers/deeds_controller.dart';
+import '../../language/controller/language_controller.dart';
 
 class BarometerChart extends ConsumerWidget {
   const BarometerChart({
@@ -30,89 +31,112 @@ class BarometerChart extends ConsumerWidget {
         ref.read(deedsProvider.notifier).getLast7DaysDeeds();
     final todayDeeds = ref.read(deedsProvider.notifier).getDeedsForToday();
     final percentage = calculatePercentageDeedsDone(todayDeeds);
-
-    String getStatus(double percentage) {
+    final languageIsEnglish = ref.watch(languageIsEnglishProvider);
+    String getStatus(bool isEnglish, double percentage) {
       if (deeds.isEmpty) {
         return '';
+      } else if (percentage <= 0) {
+        return '';
+      } else if (percentage <= 15) {
+        return !isEnglish ? 'অবস্থা: গড়ের নিচে' : 'Status: Below Avegare';
       } else if (percentage <= 25) {
-        return 'Status: Below Avegare';
+        return !isEnglish ? 'অবস্থা: ফাইন' : 'Status: Avegare';
       } else if (percentage <= 50) {
-        return 'Status: Avegare';
+        return !isEnglish ? 'অবস্থা: ভাল' : 'Status: Good';
       } else if (percentage <= 75) {
-        return 'Status: Good';
+        return !isEnglish ? 'অবস্থা: খুব ভালো' : 'Status: Very Good';
       } else {
-        return 'Status: Excellent';
+        return !isEnglish ? 'অবস্থা: চমৎকার' : 'Status: Excellent';
       }
     }
 
-    return Stack(
-      clipBehavior: Clip.none,
-      alignment: Alignment.center,
-      children: [
-        SvgPicture.asset(
-          Svgs.barometerBg,
-        ),
-        Stack(
-          clipBehavior: Clip.none,
-          children: [
-            SvgPicture.asset(
-              Svgs.barometerChart,
-              height: 150,
-            ),
-            BarometerChartBar(
-              xPosition: 7,
-              deeds: deeds['6DaysAgo'] ?? [],
-            ),
-            BarometerChartBar(
-              xPosition: 46,
-              deeds: deeds['5DaysAgo'] ?? [],
-            ),
-            BarometerChartBar(
-              xPosition: 86,
-              deeds: deeds['4DaysAgo'] ?? [],
-            ),
-            BarometerChartBar(
-              xPosition: 126,
-              deeds: deeds['3DaysAgo'] ?? [],
-            ),
-            BarometerChartBar(
-              xPosition: 166,
-              deeds: deeds['2DaysAgo'] ?? [],
-            ),
-            BarometerChartBar(
-              xPosition: 205,
-              deeds: deeds['1DayAgo'] ?? [],
-            ),
-            BarometerChartBar(
-              xPosition: 246,
-              deeds: deeds['Today'] ?? [],
-            ),
-          ],
-        ),
-        Positioned(
-          top: 50,
-          left: 18,
-          child: Txt(
-            'Today ${DateFormat('dd MMMM, yyyy').format(DateTime.now())}',
-            color: Palette.white,
-            fontSize: 20,
-          ),
-        ),
-        Positioned(
-          bottom: 50,
-          left: 18,
-          child: Txt(
-            getStatus(percentage),
-            color: Palette.white,
-            fontSize: 17,
-          ),
-        ),
-      ],
-    );
+    bool allValuesEmpty(Map<String, List<Deed>> deeds) {
+      for (final value in deeds.values) {
+        if (value.isNotEmpty) {
+          return false;
+        }
+      }
+      return true;
+    }
+
+    bool isAllEmpty = allValuesEmpty(deeds);
+
+    return isAllEmpty
+        ? SizedBox.shrink()
+        : Stack(
+            clipBehavior: Clip.none,
+            alignment: Alignment.center,
+            children: [
+              SvgPicture.asset(
+                Svgs.barometerBg,
+              ),
+              Stack(
+                clipBehavior: Clip.none,
+                children: [
+                  SvgPicture.asset(
+                    !languageIsEnglish
+                        ? Svgs.barometerChartBn
+                        : Svgs.barometerChart,
+                    height: 150,
+                  ),
+                  BarometerChartBar(
+                    xPosition: 7,
+                    deeds: deeds['6DaysAgo'] ?? [],
+                  ),
+                  BarometerChartBar(
+                    xPosition: 46,
+                    deeds: deeds['5DaysAgo'] ?? [],
+                  ),
+                  BarometerChartBar(
+                    xPosition: 86,
+                    deeds: deeds['4DaysAgo'] ?? [],
+                  ),
+                  BarometerChartBar(
+                    xPosition: 126,
+                    deeds: deeds['3DaysAgo'] ?? [],
+                  ),
+                  BarometerChartBar(
+                    xPosition: 166,
+                    deeds: deeds['2DaysAgo'] ?? [],
+                  ),
+                  BarometerChartBar(
+                    xPosition: 205,
+                    deeds: deeds['1DayAgo'] ?? [],
+                  ),
+                  BarometerChartBar(
+                    xPosition: 246,
+                    deeds: deeds['Today'] ?? [],
+                  ),
+                ],
+              ),
+              Positioned(
+                top: 50,
+                left: 18,
+                child: Txt(
+                  !languageIsEnglish
+                      ? 'আজ ${ref.read(languageIsEnglishProvider.notifier).convertEnglishToBangla(DateFormat('dd MMMM, yyyy').format(DateTime.now())).replaceAll('January', 'জানুয়ারি').replaceAll('February', 'ফেব্রুয়ারি').replaceAll('March', 'মার্চ').replaceAll('April', 'এপ্রিল').replaceAll('May', 'মে').replaceAll('June', 'জুন').replaceAll('July', 'জুলাই').replaceAll('August', 'অগাস্ট').replaceAll('September', 'সেপ্টেম্বর').replaceAll('October', 'অক্টোবর').replaceAll('November', 'নভেম্বর').replaceAll('December', 'ডিসেম্বর')}'
+                      : 'Today ${DateFormat('dd MMMM, yyyy').format(DateTime.now())}',
+                  color: Palette.white,
+                  fontSize: 20,
+                ),
+              ),
+              Positioned(
+                bottom: 50,
+                left: 18,
+                child: Txt(
+                  !languageIsEnglish
+                      ? getStatus(languageIsEnglish, percentage)
+                      : getStatus(languageIsEnglish, percentage),
+                  color: Palette.white,
+                  fontSize: 17,
+                ),
+              ),
+            ],
+          );
   }
 }
 
-class BarometerChartBar extends StatelessWidget {
+class BarometerChartBar extends ConsumerWidget {
   final double xPosition;
   final List<Deed> deeds;
   const BarometerChartBar({
@@ -145,8 +169,9 @@ class BarometerChartBar extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     double percentage = calculatePercentageDeedsDone(deeds);
+    final languageIsEnglish = ref.watch(languageIsEnglishProvider);
     return Positioned(
       bottom: 0,
       left: xPosition,
@@ -155,7 +180,9 @@ class BarometerChartBar extends StatelessWidget {
           deeds.isEmpty
               ? const Txt('')
               : Txt(
-                  '${percentage.toStringAsFixed(0)} %',
+                  !languageIsEnglish
+                      ? '${ref.read(languageIsEnglishProvider.notifier).convertEnglishToBangla(percentage.toStringAsFixed(0))} %'
+                      : '${percentage.toStringAsFixed(0)} %',
                   fontSize: 10,
                   color: Palette.white,
                 ),
@@ -177,7 +204,18 @@ class BarometerChartBar extends StatelessWidget {
               : Txt(
                   deeds[0].dayOfWeek.isEmpty
                       ? ''
-                      : deeds[0].dayOfWeek.substring(0, 3),
+                      : !languageIsEnglish
+                          ? deeds[0]
+                              .dayOfWeek
+                              .replaceAll('Monday', 'সোমবার')
+                              .replaceAll('Tuesday', 'মঙ্গলবার')
+                              .replaceAll('Wednesday', 'বুধবার')
+                              .replaceAll('Thursday', 'বৃহস্পতিবার')
+                              .replaceAll('Friday', 'শুক্রবার')
+                              .replaceAll('Saturday', 'শনিবার')
+                              .replaceAll('Sunday', 'রবিবার')
+                              .substring(0, 3)
+                          : deeds[0].dayOfWeek.substring(0, 3),
                   color: Palette.white,
                 ),
         ],

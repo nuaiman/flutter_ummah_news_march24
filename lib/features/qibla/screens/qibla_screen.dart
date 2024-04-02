@@ -11,6 +11,7 @@ import '../../gps/controllers/gps_controller.dart';
 import '../../../core/common/widgets/transparent_appbar.dart';
 import '../../../core/common/widgets/txt.dart';
 import '../../../core/constants/pngs.dart';
+import '../../language/controller/language_controller.dart';
 
 class QiblaScreen extends ConsumerStatefulWidget {
   static route() => MaterialPageRoute(
@@ -26,6 +27,7 @@ class _QiblaScreenState extends ConsumerState<QiblaScreen> {
   final _deviceSupport = FlutterQiblah.androidDeviceSensorSupport();
   @override
   Widget build(BuildContext context) {
+    final languageIsEnglish = ref.watch(languageIsEnglishProvider);
     return Container(
       decoration: const BoxDecoration(
         image: DecorationImage(
@@ -40,8 +42,8 @@ class _QiblaScreenState extends ConsumerState<QiblaScreen> {
           child: SingleChildScrollView(
             child: Column(
               children: [
-                const TransparentAppBar(
-                  text: 'Qibla',
+                TransparentAppBar(
+                  text: !languageIsEnglish ? 'কিবলা' : 'Qibla',
                 ),
                 FutureBuilder(
                   future: _deviceSupport,
@@ -80,6 +82,7 @@ class QiblahCompass extends ConsumerWidget {
   const QiblahCompass({super.key});
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final languageIsEnglish = ref.watch(languageIsEnglishProvider);
     return StreamBuilder<QiblahDirection>(
       stream: FlutterQiblah.qiblahStream,
       builder: (context, snapshot) {
@@ -125,7 +128,9 @@ class QiblahCompass extends ConsumerWidget {
               child: Column(
                 children: [
                   Txt(
-                    "${northDirection.toStringAsFixed(0)}°N",
+                    !languageIsEnglish
+                        ? '${ref.read(languageIsEnglishProvider.notifier).convertEnglishToBangla(northDirection.toStringAsFixed(0))}°ন'
+                        : "${northDirection.toStringAsFixed(0)}°N",
                     fontSize: 48,
                     color: Palette.black,
                     fontWeight: FontWeight.w500,
@@ -138,7 +143,9 @@ class QiblahCompass extends ConsumerWidget {
                   ),
                   const SizedBox(height: 10),
                   Txt(
-                    "Qibla ${qiblaDirection.toStringAsFixed(0)}°",
+                    !languageIsEnglish
+                        ? 'কিবলা°${ref.read(languageIsEnglishProvider.notifier).convertEnglishToBangla(qiblaDirection.toStringAsFixed(0))}'
+                        : "Qibla ${qiblaDirection.toStringAsFixed(0)}°",
                     fontSize: 32,
                     color: Palette.black,
                     fontWeight: FontWeight.w500,

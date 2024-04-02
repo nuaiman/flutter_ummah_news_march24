@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../../../core/constants/palette.dart';
+import '../../language/controller/language_controller.dart';
 import '../controllers/quran_controller.dart';
 import '../../../models/quran.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
@@ -72,6 +73,7 @@ class SurahScreenState extends ConsumerState<SurahScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final languageIsEnglish = ref.watch(languageIsEnglishProvider);
     return Container(
       decoration: const BoxDecoration(
         image: DecorationImage(
@@ -86,7 +88,9 @@ class SurahScreenState extends ConsumerState<SurahScreen> {
           child: Column(
             children: [
               TransparentAppBar(
-                text: widget.surah.transliterationEn,
+                text: !languageIsEnglish
+                    ? widget.surah.transliteratioBn
+                    : widget.surah.transliterationEn,
                 onBackPresses: () {
                   ref.read(quranProvider.notifier).updateState();
                 },
@@ -118,7 +122,10 @@ class SurahScreenState extends ConsumerState<SurahScreen> {
                                             MainAxisAlignment.spaceBetween,
                                         children: [
                                           Txt(
-                                            widget.surah.transliterationEn,
+                                            !languageIsEnglish
+                                                ? widget.surah.transliteratioBn
+                                                : widget
+                                                    .surah.transliterationEn,
                                             color: Palette.white,
                                             fontSize: 24,
                                             fontWeight: FontWeight.w500,
@@ -137,7 +144,9 @@ class SurahScreenState extends ConsumerState<SurahScreen> {
                                             MainAxisAlignment.start,
                                         children: [
                                           Txt(
-                                            widget.surah.translationEn,
+                                            !languageIsEnglish
+                                                ? widget.surah.translationBn
+                                                : widget.surah.translationEn,
                                             color: Palette.white,
                                             fontSize: 18,
                                           ),
@@ -153,7 +162,9 @@ class SurahScreenState extends ConsumerState<SurahScreen> {
                                             MainAxisAlignment.start,
                                         children: [
                                           Txt(
-                                            'Total Verse: ${widget.surah.verses.length}',
+                                            !languageIsEnglish
+                                                ? 'মোট আয়াত: ${ref.read(languageIsEnglishProvider.notifier).convertEnglishToBangla(widget.surah.verses.length.toString())}'
+                                                : 'Total Verse: ${widget.surah.verses.length}',
                                             color: Palette.white,
                                             fontSize: 18,
                                           ),
@@ -201,7 +212,15 @@ class SurahScreenState extends ConsumerState<SurahScreen> {
                                                   Svgs.counterFill,
                                                 ),
                                                 Txt(
-                                                  verse.id.toString(),
+                                                  !languageIsEnglish
+                                                      ? ref
+                                                          .read(
+                                                              languageIsEnglishProvider
+                                                                  .notifier)
+                                                          .convertEnglishToBangla(
+                                                              verse.id
+                                                                  .toString())
+                                                      : verse.id.toString(),
                                                   color: Palette.white,
                                                   fontSize: 14,
                                                 ),
@@ -232,7 +251,9 @@ class SurahScreenState extends ConsumerState<SurahScreen> {
                                             children: [
                                               Expanded(
                                                   child: Txt(
-                                                verse.transliterationEn,
+                                                !languageIsEnglish
+                                                    ? verse.transliterationBn
+                                                    : verse.transliterationEn,
                                                 fontSize: 20,
                                                 fontWeight: FontWeight.w500,
                                               )),
@@ -245,7 +266,9 @@ class SurahScreenState extends ConsumerState<SurahScreen> {
                                           children: [
                                             Expanded(
                                                 child: Txt(
-                                              verse.translationEn,
+                                              !languageIsEnglish
+                                                  ? verse.translationBn
+                                                  : verse.translationEn,
                                               fontSize: 16,
                                             )),
                                           ],

@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
 import '../../../core/common/widgets/transparent_appbar.dart';
 import '../../../core/constants/pngs.dart';
 import '../../../models/deed.dart';
+import '../../language/controller/language_controller.dart';
 import '../widgets/deed_tile.dart';
 
-class DeedsScreen extends StatelessWidget {
+class DeedsScreen extends ConsumerWidget {
   static route() => MaterialPageRoute(
         builder: (context) => const DeedsScreen(),
       );
@@ -14,7 +16,8 @@ class DeedsScreen extends StatelessWidget {
   const DeedsScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final languageIsEnglish = ref.watch(languageIsEnglishProvider);
     return Scaffold(
       body: Container(
         width: MediaQuery.of(context).size.width,
@@ -26,8 +29,8 @@ class DeedsScreen extends StatelessWidget {
         ),
         child: Column(
           children: [
-            const TransparentAppBar(
-              text: 'Deeds',
+            TransparentAppBar(
+              text: !languageIsEnglish ? 'ক্রিয়াকাণ্ড' : 'Deeds',
             ),
             Expanded(
               child: ListView(

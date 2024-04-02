@@ -2,13 +2,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:imaan_barometer/models/salah.dart';
+import 'package:imaan_barometer/features/home/screens/settings_screen.dart';
+import 'package:imaan_barometer/features/language/controller/language_controller.dart';
 import '../../../core/constants/pngs.dart';
 import '../../deeds/screens/deeds_screen.dart';
 import '../../qibla/screens/qibla_screen.dart';
 import '../../quran/screens/quran_screen.dart';
 import '../../salah/screens/salah_screen.dart';
-import 'package:intl/intl.dart';
 import 'package:top_modal_sheet/top_modal_sheet.dart';
 
 import '../../../core/constants/palette.dart';
@@ -49,8 +49,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final languageIsEnglish = ref.watch(languageIsEnglishProvider);
     return Scaffold(
       body: Container(
+        height: MediaQuery.of(context).size.height,
         decoration: const BoxDecoration(
           image: DecorationImage(
             image: AssetImage(Pngs.bg),
@@ -78,7 +80,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         ),
                       ),
                       IconButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.of(context).push(SettingsScreen.route());
+                        },
                         icon: SvgPicture.asset(
                           Svgs.menu,
                         ),
@@ -94,7 +98,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         GridItemTile(
-                          label: 'Deeds',
+                          label: !languageIsEnglish ? 'ক্রিয়াকাণ্ড' : 'Deeds',
                           svgPath: Svgs.deeds,
                           onTap: () {
                             Navigator.of(context).push(DeedsScreen.route());
@@ -102,7 +106,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         ),
                         const SizedBox(width: 20),
                         GridItemTile(
-                          label: 'Quran',
+                          label: !languageIsEnglish ? 'আল-কোরআন' : 'Al-Quran',
                           svgPath: Svgs.quran,
                           onTap: () {
                             Navigator.of(context).push(QuranScreen.route());
@@ -115,7 +119,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         GridItemTile(
-                          label: 'Qibla',
+                          label: !languageIsEnglish ? 'কিবলা' : 'Qibla',
                           svgPath: Svgs.qibla,
                           onTap: () {
                             Navigator.of(context).push(QiblaScreen.route());
@@ -123,7 +127,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         ),
                         const SizedBox(width: 20),
                         GridItemTile(
-                          label: 'Salah',
+                          label: !languageIsEnglish ? 'সালাত' : 'Salah',
                           svgPath: Svgs.salah,
                           onTap: () {
                             Navigator.of(context).push(SalahScreen.route());
@@ -134,61 +138,61 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   ],
                 ),
                 NextPrayerTime(),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'Ayah of The Day',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Container(
-                      decoration: BoxDecoration(
-                        color: Palette.liteGrey,
-                        borderRadius: BorderRadius.circular(25),
-                      ),
-                      child: const Padding(
-                        padding: EdgeInsets.all(16.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Expanded(
-                                  child: Text(
-                                    '1234324234oidfdfkgdfgj4523eorgjhdfkjghjkthqw4uirthjkpghasdjipgh',
-                                    softWrap: true,
-                                    style: TextStyle(
-                                      fontSize: 24,
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(width: 20),
-                                Icon(
-                                  CupertinoIcons.heart,
-                                  size: 40,
-                                )
-                              ],
-                            ),
-                            SizedBox(height: 20),
-                            Text(
-                              '[Quran 8:33]',
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+                // Column(
+                //   crossAxisAlignment: CrossAxisAlignment.start,
+                //   children: [
+                //     Text(
+                //       !languageIsEnglish ? 'দিনের আয়াত' : 'Ayah of The Day',
+                //       style: TextStyle(
+                //         fontSize: 20,
+                //         fontWeight: FontWeight.w600,
+                //       ),
+                //     ),
+                //     const SizedBox(height: 8),
+                //     Container(
+                //       decoration: BoxDecoration(
+                //         color: Palette.liteGrey,
+                //         borderRadius: BorderRadius.circular(25),
+                //       ),
+                //       child: const Padding(
+                //         padding: EdgeInsets.all(16.0),
+                //         child: Column(
+                //           crossAxisAlignment: CrossAxisAlignment.start,
+                //           children: [
+                //             Row(
+                //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                //               crossAxisAlignment: CrossAxisAlignment.start,
+                //               children: [
+                //                 Expanded(
+                //                   child: Text(
+                //                     '1234324234oidfdfkgdfgj4523eorgjhdfkjghjkthqw4uirthjkpghasdjipgh',
+                //                     softWrap: true,
+                //                     style: TextStyle(
+                //                       fontSize: 24,
+                //                     ),
+                //                   ),
+                //                 ),
+                //                 SizedBox(width: 20),
+                //                 Icon(
+                //                   CupertinoIcons.heart,
+                //                   size: 40,
+                //                 )
+                //               ],
+                //             ),
+                //             SizedBox(height: 20),
+                //             Text(
+                //               '[Quran 8:33]',
+                //               style: TextStyle(
+                //                 fontSize: 20,
+                //                 fontWeight: FontWeight.w500,
+                //               ),
+                //             ),
+                //           ],
+                //         ),
+                //       ),
+                //     ),
+                //   ],
+                // ),
               ],
             ),
           ),

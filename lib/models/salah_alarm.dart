@@ -4,13 +4,15 @@ class SalahAlarm {
   final int id;
   final String titleEn;
   final String titleBn;
-  final bool isActive;
+  final bool isAzan;
+  final bool isEnglish;
   final DateTime date;
   SalahAlarm({
     required this.id,
     required this.titleEn,
     required this.titleBn,
-    required this.isActive,
+    required this.isAzan,
+    required this.isEnglish,
     required this.date,
   });
 
@@ -18,14 +20,16 @@ class SalahAlarm {
     int? id,
     String? titleEn,
     String? titleBn,
-    bool? isActive,
+    bool? isAzan,
+    bool? isEnglish,
     DateTime? date,
   }) {
     return SalahAlarm(
       id: id ?? this.id,
       titleEn: titleEn ?? this.titleEn,
       titleBn: titleBn ?? this.titleBn,
-      isActive: isActive ?? this.isActive,
+      isAzan: isAzan ?? this.isAzan,
+      isEnglish: isEnglish ?? this.isEnglish,
       date: date ?? this.date,
     );
   }
@@ -35,7 +39,8 @@ class SalahAlarm {
       'id': id,
       'titleEn': titleEn,
       'titleBn': titleBn,
-      'isActive': isActive,
+      'isAzan': isAzan,
+      'isEnglish': isEnglish,
       'date': date.millisecondsSinceEpoch,
     };
   }
@@ -45,7 +50,8 @@ class SalahAlarm {
       id: map['id'] as int,
       titleEn: map['titleEn'] as String,
       titleBn: map['titleBn'] as String,
-      isActive: map['isActive'] as bool,
+      isAzan: map['isAzan'] as bool,
+      isEnglish: map['isEnglish'] as bool,
       date: DateTime.fromMillisecondsSinceEpoch(map['date'] as int),
     );
   }
@@ -57,7 +63,7 @@ class SalahAlarm {
 
   @override
   String toString() {
-    return 'SalahAlarm(id: $id, titleEn: $titleEn, titleBn: $titleBn, isActive: $isActive, date: $date)';
+    return 'SalahAlarm(id: $id, titleEn: $titleEn, titleBn: $titleBn, isAzan: $isAzan, isEnglish: $isEnglish, date: $date)';
   }
 
   @override
@@ -67,7 +73,8 @@ class SalahAlarm {
     return other.id == id &&
         other.titleEn == titleEn &&
         other.titleBn == titleBn &&
-        other.isActive == isActive &&
+        other.isAzan == isAzan &&
+        other.isEnglish == isEnglish &&
         other.date == date;
   }
 
@@ -76,7 +83,8 @@ class SalahAlarm {
     return id.hashCode ^
         titleEn.hashCode ^
         titleBn.hashCode ^
-        isActive.hashCode ^
+        isAzan.hashCode ^
+        isEnglish.hashCode ^
         date.hashCode;
   }
 }

@@ -154,6 +154,7 @@ import 'package:imaan_barometer/features/quran/screens/surah_screen.dart';
 
 import '../../../core/common/widgets/transparent_appbar.dart';
 import '../../../models/quran.dart';
+import '../../language/controller/language_controller.dart';
 
 class QuranScreen extends ConsumerWidget {
   static route() => MaterialPageRoute(
@@ -166,6 +167,8 @@ class QuranScreen extends ConsumerWidget {
     final quran = ref.watch(quranProvider);
     SavedSurahVerse? gottenSurah =
         ref.watch(quranProvider.notifier).savedSurahVerse;
+    final languageIsEnglish = ref.watch(languageIsEnglishProvider);
+
     return Container(
       decoration: const BoxDecoration(
         image: DecorationImage(
@@ -179,8 +182,8 @@ class QuranScreen extends ConsumerWidget {
           padding: const EdgeInsets.symmetric(horizontal: 6),
           child: Column(
             children: [
-              const TransparentAppBar(
-                text: 'Al-Quran',
+              TransparentAppBar(
+                text: !languageIsEnglish ? 'আল-কোরআন' : 'Al-Quran',
               ),
               gottenSurah == null
                   ? const SizedBox.shrink()
@@ -194,11 +197,13 @@ class QuranScreen extends ConsumerWidget {
                                 left: 12, right: 12, bottom: 18),
                             child: Column(
                               children: [
-                                const Row(
+                                Row(
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
                                     Txt(
-                                      'Last Read',
+                                      !languageIsEnglish
+                                          ? 'শেষ পড়া'
+                                          : 'Last Read',
                                       color: Palette.lime,
                                       fontSize: 14,
                                     ),
@@ -210,7 +215,9 @@ class QuranScreen extends ConsumerWidget {
                                       MainAxisAlignment.spaceBetween,
                                   children: [
                                     Txt(
-                                      gottenSurah.surah.transliterationEn,
+                                      !languageIsEnglish
+                                          ? gottenSurah.surah.transliteratioBn
+                                          : gottenSurah.surah.transliterationEn,
                                       color: Palette.white,
                                       fontSize: 24,
                                       fontWeight: FontWeight.w500,
@@ -234,7 +241,9 @@ class QuranScreen extends ConsumerWidget {
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
                                     Txt(
-                                      'Verse: ${gottenSurah.verseId}',
+                                      !languageIsEnglish
+                                          ? 'আয়াত: ${ref.read(languageIsEnglishProvider.notifier).convertEnglishToBangla(gottenSurah.verseId.toString())}'
+                                          : 'Verse: ${gottenSurah.verseId}',
                                       color: Palette.white,
                                       fontSize: 18,
                                     ),
@@ -280,19 +289,29 @@ class QuranScreen extends ConsumerWidget {
                                   children: [
                                     SvgPicture.asset(Svgs.counterStroke),
                                     Txt(
-                                      (index + 1).toString(),
+                                      !languageIsEnglish
+                                          ? ref
+                                              .read(languageIsEnglishProvider
+                                                  .notifier)
+                                              .convertEnglishToBangla(
+                                                  (index + 1).toString())
+                                          : (index + 1).toString(),
                                       fontSize: 20,
                                       color: Palette.green,
                                     ),
                                   ],
                                 ),
                                 title: Txt(
-                                  surah.transliterationEn,
+                                  !languageIsEnglish
+                                      ? surah.transliteratioBn
+                                      : surah.transliterationEn,
                                   fontSize: 24,
                                   fontWeight: FontWeight.w600,
                                 ),
                                 subtitle: Txt(
-                                  surah.translationEn,
+                                  !languageIsEnglish
+                                      ? surah.translationBn
+                                      : surah.translationEn,
                                   fontSize: 18,
                                   color: Palette.grey,
                                 ),

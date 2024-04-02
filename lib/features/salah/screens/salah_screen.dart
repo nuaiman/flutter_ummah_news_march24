@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:imaan_barometer/features/notifications/controllers/salah_notification_controller.dart';
+import 'package:imaan_barometer/features/salah/screens/salah_alarm_screen.dart';
 import '../../../core/common/widgets/txt.dart';
 import '../../../core/constants/palette.dart';
 import '../../../core/constants/svgs.dart';
+import '../../../models/salah_alarm.dart';
+import '../../language/controller/language_controller.dart';
 import '../controllers/salah_controller.dart';
 import 'package:intl/intl.dart';
 
@@ -26,6 +30,8 @@ class SalahScreen extends ConsumerWidget {
     Duration remainingTime =
         ref.read(salahProvider.notifier).updateRemainingTime();
     final gps = ref.read(gpsControllerProvider);
+    final languageIsEnglish = ref.watch(languageIsEnglishProvider);
+
     return Container(
       decoration: const BoxDecoration(
         image: DecorationImage(
@@ -51,11 +57,15 @@ class SalahScreen extends ConsumerWidget {
                       children: [
                         ListTile(
                           title: Txt(
-                            'Next Prayer in ${remainingTime.inHours}:${(remainingTime.inMinutes.remainder(60)).toString().padLeft(2, '0')}:${(remainingTime.inSeconds.remainder(60)).toString().padLeft(2, '0')}',
+                            !languageIsEnglish
+                                ? 'পরবর্তী সালাত ${ref.read(languageIsEnglishProvider.notifier).convertEnglishToBangla(remainingTime.inHours.toString())}:${ref.read(languageIsEnglishProvider.notifier).convertEnglishToBangla((remainingTime.inMinutes.remainder(60)).toString().padLeft(2, '0'))}:${ref.read(languageIsEnglishProvider.notifier).convertEnglishToBangla((remainingTime.inSeconds.remainder(60)).toString().padLeft(2, '0'))}'
+                                : 'Next Prayer in ${remainingTime.inHours}:${(remainingTime.inMinutes.remainder(60)).toString().padLeft(2, '0')}:${(remainingTime.inSeconds.remainder(60)).toString().padLeft(2, '0')}',
                             fontSize: 17,
                           ),
                           subtitle: Txt(
-                            '${nextSalah.nameEn} ${DateFormat.jm().format(nextSalah.time)}',
+                            !languageIsEnglish
+                                ? '${nextSalah.nameBn} ${ref.read(languageIsEnglishProvider.notifier).convertEnglishToBangla(DateFormat.jm().format(nextSalah.time)).replaceAll('AM', 'এ.ম').replaceAll('PM', 'প.ম')}'
+                                : '${nextSalah.nameEn} ${DateFormat.jm().format(nextSalah.time)}',
                             fontSize: 40,
                           ),
                         ),
@@ -108,7 +118,7 @@ class SalahScreen extends ConsumerWidget {
   }
 }
 
-class SalahTimeTile extends StatelessWidget {
+class SalahTimeTile extends ConsumerWidget {
   final Salah salah;
   const SalahTimeTile({
     super.key,
@@ -116,11 +126,16 @@ class SalahTimeTile extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    ref.watch(salahNotificationProvider);
+    SalahAlarm? salahNotif = ref
+        .read(salahNotificationProvider.notifier)
+        .getSalahAlarmById(salah.id);
+    final languageIsEnglish = ref.watch(languageIsEnglishProvider);
     return Expanded(
       child: Container(
         decoration: BoxDecoration(
-          color: Palette.liteGrey,
+          color: salahNotif != null ? Palette.green : Palette.liteGrey,
           borderRadius: BorderRadius.circular(15),
         ),
         child: Padding(
@@ -132,21 +147,40 @@ class SalahTimeTile extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   IconButton(
-                    onPressed: () {},
-                    icon: SvgPicture.asset(Svgs.notificationBlack),
+                    onPressed: () {
+                      Navigator.of(context).push(SalahAlarmScreen.route(salah));
+                    },
+                    icon: SvgPicture.asset(
+                      salahNotif != null
+                          ? Svgs.notificationBlack
+                          : Svgs.notificationOff,
+                      colorFilter: ColorFilter.mode(
+                        salahNotif != null ? Palette.white : Palette.black,
+                        BlendMode.srcIn,
+                      ),
+                    ),
                   ),
                 ],
               ),
               const SizedBox(height: 24),
               Txt(
-                salah.nameEn,
+                !languageIsEnglish ? salah.nameBn : salah.nameEn,
                 fontSize: 28,
                 fontWeight: FontWeight.w700,
+                color: salahNotif != null ? Palette.white : Palette.black,
               ),
               Txt(
-                DateFormat.jm().format(salah.time),
+                !languageIsEnglish
+                    ? ref
+                        .read(languageIsEnglishProvider.notifier)
+                        .convertEnglishToBangla(
+                            DateFormat.jm().format(salah.time))
+                        .replaceAll('AM', 'এ.ম')
+                        .replaceAll('PM', 'প.ম')
+                    : DateFormat.jm().format(salah.time),
                 fontSize: 22,
                 fontWeight: FontWeight.w500,
+                color: salahNotif != null ? Palette.white : Palette.black,
               ),
               const SizedBox(height: 16),
             ],
