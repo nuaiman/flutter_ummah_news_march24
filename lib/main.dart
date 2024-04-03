@@ -106,3 +106,40 @@ class _BarometerOfImaanState extends State<BarometerOfImaan> {
     );
   }
 }
+
+
+// import 'dart:convert';
+
+// void main() {
+//   // Sample JSON data
+//   List<Map<String, dynamic>> verses =;
+
+//   String replacementStrings = '''
+
+//   ''';
+
+//   List<String> replacementLines = replacementStrings.split('\n');
+
+//   int minCount = verses.length < replacementLines.length
+//       ? verses.length
+//       : replacementLines.length;
+
+//   for (int i = 0; i < minCount; i++) {
+//     verses[i]['transliteration_en'] = replaceHtmlTags(replacementLines[i]);
+//   }
+
+//   String modifiedJsonString = json.encode(verses);
+
+//   print(modifiedJsonString);
+// }
+
+// String replaceHtmlTags(String htmlString) {
+//   // Trim each line, replace HTML tags and remove single quotes
+//   return htmlString
+//       .split('\n') // Split by newline
+//       .map((line) => line.trim()) // Trim each line
+//       .where((line) => line.isNotEmpty) // Remove empty lines
+//       .join(' ') // Join lines back with space
+//       .replaceAll(RegExp(r'<[^>]*>'), '') // Replace HTML tags
+//       .replaceAll("'", ''); // Remove single quotes
+// }
